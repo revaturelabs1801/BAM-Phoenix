@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for controller\subtopicAddController.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">controller/</a> subtopicAddController.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">16.25% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>13/80</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">14.29% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>2/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">27.27% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>3/11</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">16.25% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>13/80</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * Controller for adding subtopics
+ * @author: Samuel Louis-Pierre &amp; Avant Mathur
+ */
+app.controller("subTopicController", function ($scope, SessionService, $location, $compile, $http) {
+&nbsp;
+    //set batchId with the id of the currentBatch if it exists else use the trainerBatch
+    var batchId;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (SessionService.get("currentBatch")) {
+        batchId = SessionService.get("currentBatch").id;
+        SessionService.set("currentBatchName", SessionService.get("currentBatch").name);
+    } else {
+        //if currentBatch is not set use the trainerBatch's id
+<span class="cstat-no" title="statement not covered" >        batchId = SessionService.get("trainerBatch").id;</span>
+<span class="cstat-no" title="statement not covered" >        SessionService.set("currentBatchName", SessionService.get("trainerBatch").name);</span>
+    }
+&nbsp;
+    //Check if currentBatch is set before using it.
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (batchId) {
+        //get the batch from the server by the id.
+        $http({
+            url: "rest/api/v1/Batches/ById",
+            method: "GET",
+            params: {
+                batchId: batchId
+            }
+        }).then(<span class="fstat-no" title="function not covered" >function (response) {</span>
+<span class="cstat-no" title="statement not covered" >            $scope.batch = response.data </span>//reponse.data is a javascript object (automatically parsed from the JSON from the server)
+        }, function (response) {
+            $scope.message = true;
+            $scope.msg = 'Failed to retrieve batch';
+        });
+    }
+&nbsp;
+    $scope.getSubtopicPool = function () {
+        $http({
+            url: "rest/api/v1/Curriculum/TopicPool",
+            method: "GET", //Getting the subtopics
+        }).then(<span class="fstat-no" title="function not covered" >function (response) {</span>
+<span class="cstat-no" title="statement not covered" >            var subtopics = response.data;</span>
+<span class="cstat-no" title="statement not covered" >            var uniqueTopics = new Set();</span>
+<span class="cstat-no" title="statement not covered" >            var topicMap = new Map();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var subtopicArray = [];</span>
+<span class="cstat-no" title="statement not covered" >            for (i in subtopics) {</span>
+<span class="cstat-no" title="statement not covered" >                if (!uniqueTopics.has(subtopics[i].topic.name)) {</span>
+<span class="cstat-no" title="statement not covered" >                    uniqueTopics.add(subtopics[i].topic.name);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    var array = [];</span>
+<span class="cstat-no" title="statement not covered" >                    array.push(subtopics[i].name);</span>
+<span class="cstat-no" title="statement not covered" >                    topicMap.set(subtopics[i].topic.name, array);</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    var array = topicMap.get(subtopics[i].topic.name);</span>
+<span class="cstat-no" title="statement not covered" >                    topicMap.delete(subtopics[i].topic.name);</span>
+<span class="cstat-no" title="statement not covered" >                    array.push(subtopics[i].name);</span>
+<span class="cstat-no" title="statement not covered" >                    topicMap.set(subtopics[i].topic.name, array);</span>
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var subTopicsMenu = angular.element(document.querySelector('#subtopics'));</span>
+<span class="cstat-no" title="statement not covered" >            var topicnameevent = angular.element(document.querySelector('#topicname'));</span>
+&nbsp;
+            //loading topics in the dropdown menu
+<span class="cstat-no" title="statement not covered" >            for (topic of uniqueTopics) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var top = angular.element("&lt;option&gt;" + topic + "&lt;/option&gt;");</span>
+<span class="cstat-no" title="statement not covered" >                var topic = $compile(top)($scope);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                topicnameevent.append(topic);</span>
+            }
+&nbsp;
+            //based on the topic selected, load correlated subtopics
+<span class="cstat-no" title="statement not covered" >            $('#topicname').change(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                var selection = this.value;</span>
+<span class="cstat-no" title="statement not covered" >                $scope.selectedTopic = selection;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                subTopicsMenu.empty();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var subIDs = 0;</span>
+                //adding subtopics to the subtopics dropdown menu
+<span class="cstat-no" title="statement not covered" >                for (subtopic of Array.from(topicMap.get(selection))) {</span>
+<span class="cstat-no" title="statement not covered" >                    var ev = angular.element("&lt;option id = events" + subIDs++ + "&gt;" + subtopic + "&lt;/option&gt;");</span>
+<span class="cstat-no" title="statement not covered" >                    var sub = $compile(ev)($scope);</span>
+<span class="cstat-no" title="statement not covered" >                    subTopicsMenu.append(sub);</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                $scope.selectedSubtopic = angular.element(document.querySelector('#events0'))[0].innerText;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                for (i in subtopics) {</span>
+<span class="cstat-no" title="statement not covered" >                    if ($scope.selectedSubtopic == subtopics[i].name) {</span>
+<span class="cstat-no" title="statement not covered" >                        $scope.topic_id = subtopics[i].topic.id;</span>
+<span class="cstat-no" title="statement not covered" >                        $scope.subtopic_id = subtopics[i].id;</span>
+                    }
+                }
+            });
+&nbsp;
+            //get topic and subtopic id of selected items
+<span class="cstat-no" title="statement not covered" >            $('#subtopics').change(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                var selection = this.value;</span>
+<span class="cstat-no" title="statement not covered" >                $scope.selectedSubtopic = selection;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                for (i in subtopics) {</span>
+<span class="cstat-no" title="statement not covered" >                    if ($scope.selectedSubtopic == subtopics[i].name) {</span>
+<span class="cstat-no" title="statement not covered" >                        $scope.topic_id = subtopics[i].topic.id;</span>
+<span class="cstat-no" title="statement not covered" >                        $scope.subtopic_id = subtopics[i].id;</span>
+                        // $scope.prevDate = subtopics[i].subtopicDate;
+                    }
+                }
+            });
+&nbsp;
+            //based on date selected and subtopic selected,
+            //check if subtopic already exist on that date
+<span class="cstat-no" title="statement not covered" >            $('#startDate').change(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                var selection = this.value;</span>
+<span class="cstat-no" title="statement not covered" >                $scope.date = selection;</span>
+<span class="cstat-no" title="statement not covered" >                var end = new Date($scope.batch.endDate);</span>
+<span class="cstat-no" title="statement not covered" >                var start = new Date($scope.batch.startDate);</span>
+                // var prevdate = new Date($scope.prevDate);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var timestamp = new Date(selection).getTime() + 46800000;</span>
+<span class="cstat-no" title="statement not covered" >                var newDate = new Date(new Date(timestamp).setHours(0,0,0,0));</span>
+&nbsp;
+                // $scope.stDate = prevdate;
+<span class="cstat-no" title="statement not covered" >                if (newDate &lt; start || newDate &gt; end)</span>
+                {
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    this.value = null;</span>
+                }
+                else {
+<span class="cstat-no" title="statement not covered" >                    $scope.selDate = newDate;</span>
+                }
+                // if($scope.stDate.getMonth() == $scope.selDate.getMonth() &amp;&amp; $scope.stDate.getDate() == $scope.selDate.getDate()){
+                //     //EMPTY BECAUSE
+                // }
+            });
+        });
+    }
+&nbsp;
+    //load the subtopic pool on page load
+    $scope.getSubtopicPool();
+&nbsp;
+    /*Creating the objects that are needed for subtopic object
+    by pulling the values from the corresponding html elements.*/
+    $scope.addSubtopic = <span class="fstat-no" title="function not covered" >function () {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var topicName = {</span>
+            id: $scope.topic_id,
+            name: $scope.selectedTopic
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var subTopicType = {</span>
+            id: 1,
+            name: "Lesson"
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var subtopicName = {</span>
+            id: $scope.subtopic_id,
+            name: $scope.selectedSubtopic,
+            topic: topicName,
+            type: subTopicType
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var subtopicDate = $scope.selDate;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var status = {</span>
+            id: 1,
+            name: "Pending"
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var subtopic = {</span>
+            subtopicName: subtopicName,
+            batch: $scope.batch,
+            status: status,
+            subtopicDate: subtopicDate
+        }
+&nbsp;
+        /*Persisting the subtopics to the database by using the end points
+         * checking if dates match and denying request if equal */
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        $scope.stDate = $scope.selDate;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        $http({</span>
+            url: "rest/api/v1/Subtopic/addSubtopic",
+            method: 'GET',
+            params: {json:subtopic}
+&nbsp;
+        }).then(<span class="fstat-no" title="function not covered" >function success(response) {</span>
+<span class="cstat-no" title="statement not covered" >            $scope.message = true;</span>
+<span class="cstat-no" title="statement not covered" >            $scope.msg = 'Successfully added!';</span>
+<span class="cstat-no" title="statement not covered" >            $scope.alertClass = 'alert alert-success';</span>
+        }, <span class="fstat-no" title="function not covered" >function error(response) {</span>
+<span class="cstat-no" title="statement not covered" >            $scope.message = true;</span>
+<span class="cstat-no" title="statement not covered" >            $scope.msg = 'Failed to add Subtopic';</span>
+        });
+&nbsp;
+    }
+});</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Oct 24 2017 08:33:13 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
