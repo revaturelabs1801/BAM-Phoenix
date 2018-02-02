@@ -31,7 +31,7 @@ public class UserController {
 
 	@Autowired
 	BatchService batchService;
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method gets All Users
 	 * @return List<BamUser> : all users
 	 */
@@ -41,7 +41,7 @@ public class UserController {
 		
 		return new ResponseEntity<List<BamUser>>(allUsers, HttpStatus.ACCEPTED);
 	}
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method gets all trainers
 	 * @return List<BamUser> : all trainers
 	 */
@@ -52,7 +52,7 @@ public class UserController {
 		return new ResponseEntity<List<BamUser>>(allTrainers, HttpStatus.ACCEPTED);
 	}
 
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method gets all associates
 	 * @return List<BamUser> : all associates
 	 */
@@ -63,7 +63,7 @@ public class UserController {
 		return new ResponseEntity<List<BamUser>>(allAssociates, HttpStatus.ACCEPTED);
 	}
 
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method gets all users in batch
 	 * @param request
 	 * @return List<BamUser> : users in batch
@@ -81,7 +81,7 @@ public class UserController {
 		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.ACCEPTED);
 	}
 
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * removes user from batch then returns user with updated batch
 	 * 
 	 * @param request
@@ -107,7 +107,7 @@ public class UserController {
 		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.ACCEPTED);
 	}
 
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Updates the current user
 	 * 
 	 * @param currentUser
@@ -125,7 +125,7 @@ public class UserController {
 			return new ResponseEntity<BamUser>(updatedUser, HttpStatus.BAD_REQUEST);
 		}
 	}
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method registers the current user
 	 * 
 	 * @param currentUser
@@ -148,7 +148,7 @@ public class UserController {
 	}
 
 
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method resets the password for the current user
 	 * 
 	 * @param userNewPass
@@ -168,7 +168,7 @@ public class UserController {
 		}
 	}
 	
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method removes user and returns updated batch
 	 * 
 	 * @param request
@@ -197,7 +197,7 @@ public class UserController {
 		}
 	}
 
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method adds users to the batch
 	 * 
 	 * @param request
@@ -222,7 +222,7 @@ public class UserController {
 		}
 	}
 
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method returns users not in batch
 	 * 
 	 * @param request
@@ -233,7 +233,7 @@ public class UserController {
 		List<BamUser> usersNotInBatch = userService.findUsersNotInBatch();
 		return new ResponseEntity<List<BamUser>>(usersNotInBatch, HttpStatus.ACCEPTED);
 	}
-	/**
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method resets the password
 	 * 
 	 * @param email
