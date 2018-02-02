@@ -21,24 +21,24 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Entity
-@Table(name = "batches")
+@Table(name = "BATCHES")
 public class Batch {
 
 	@Id
-	@Column(name = "Batch_ID")
+	@Column(name = "BATCH_ID")
 	@SequenceGenerator(name = "BATCH_ID_SEQ", sequenceName = "BATCH_ID_SEQ")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BATCH_ID_SEQ")
 	private Integer id;
 
-	@Column(name = "Batch_Name")
+	@Column(name = "BATCH_NAME")
 	@NotEmpty(message = "Batch name cannot be empty")
 	private String name;
 
-	@Column(name = "Start_Date")
+	@Column(name = "START_DATE")
 	@NotNull(message = "Start date cannot be empty")
 	private Timestamp startDate;
 
-	@Column(name = "End_Date")
+	@Column(name = "END_DATE")
 	@NotNull(message = "End date cannot be empty")
 	private Timestamp endDate;
 
@@ -55,7 +55,7 @@ public class Batch {
 		 */
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "Batch_Type_ID", referencedColumnName = "Batch_Type_ID")
+	@JoinColumn(name = "BATCH_TYPE_ID", referencedColumnName = "BATCH_TYPE_ID")
 	@Autowired
 	private BatchType type;
 

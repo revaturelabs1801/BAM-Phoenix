@@ -12,16 +12,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Entity
-@Table(name = "Subtopic_Status")
+@Table(name = "SUBTOPIC_STATUS")
 public class SubtopicStatus {
 
 	@Id
-	@Column(name = "Status_ID")
-	@SequenceGenerator(name = "Status_ID_SEQ", sequenceName = "Status_ID_SEQ")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Status_ID_SEQ")
+	@Column(name = "STATUS_ID")
+	@SequenceGenerator(name = "STATUS_ID_SEQ", sequenceName = "STATUS_ID_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STATUS_ID_SEQ")
 	private Integer id;
 
-	@Column(name = "Status_Name")
+	@Column(name = "STATUS_NAME")
 	private String name;
 
 	public SubtopicStatus() {
