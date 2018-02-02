@@ -1,14 +1,11 @@
 package com.revature.bam.controller;
 
-import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.bam.bean.Subtopic;
 import com.revature.bam.bean.SubtopicStatus;
 import com.revature.bam.bean.TopicName;
@@ -55,10 +51,11 @@ public class CalendarController {
 	 * 
 	 * @param request
 	 *            - Parameters: batchId (int), pageNumber (int), pageSize (int)
-	 * @return List<Stubtopic> , HttpStatus.OK (200) if successful, BAD REQUEST (400)
-	 *         if missing parameters
+	 * @return List<Stubtopic> , HttpStatus.OK (200) if successful, BAD REQUEST
+	 *         (400) if missing parameters
 	 * 
-	 *         Authors: Michael Garza Gary LaMountain
+	 *         Authors: Michael Garza Gary LaMountain (batch unknown), Charlie
+	 *         Harris (1712-dec10-java-Steve)
 	 * 
 	 *         note: It will be better to sort by subtopicDate because it will load
 	 *         the most recent subtopics. However, since the subtopics have the
@@ -78,9 +75,12 @@ public class CalendarController {
 		int batchId = Integer.parseInt(batchIdParam);
 		int pageNum = Integer.parseInt(pageNumParam);
 		int pageSiz = Integer.parseInt(pageSizeParam);
-
-		return new ResponseEntity<List<Subtopic>>(
-				subtopicService.findByBatchId(batchId, new PageRequest(pageNum, pageSiz)), HttpStatus.OK);
+		
+		List<Subtopic> subtopicLst = subtopicService.findByBatchId(batchId, new PageRequest(pageNum, pageSiz));
+		if (subtopicLst.isEmpty()) {
+			return new ResponseEntity<List<Subtopic>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<Subtopic>>(subtopicLst, HttpStatus.OK);
 	}
 
 	/**
@@ -90,6 +90,7 @@ public class CalendarController {
 	 *            -Parameters: batchId (int)
 	 * @return List of subtopics for the batch with the given id OK (200) if
 	 *         successful, BAD REQUEST (400) if missing parameters
+	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
 	@GetMapping("subtopics")
 	public ResponseEntity<List<Subtopic>> getSubtopicsByBatch(HttpServletRequest request) {
@@ -100,7 +101,11 @@ public class CalendarController {
 
 		int batchId = Integer.parseInt(batchIdParam);
 		
-		return new ResponseEntity<List<Subtopic>>(subtopicService.getSubtopicByBatchId(batchId), HttpStatus.OK);
+		List<Subtopic> subtopicLst = subtopicService.getSubtopicByBatchId(batchId);
+		if (subtopicLst.isEmpty()) {
+			return new ResponseEntity<List<Subtopic>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<Subtopic>>(subtopicLst, HttpStatus.OK);
 	}
 
 	/**
@@ -110,7 +115,8 @@ public class CalendarController {
 	 *            -Parameters: batchId (int)
 	 * @return number(Long) of Subtopics, OK (200) if successful, BAD REQUEST (400)
 	 *         if missing parameters
-	 * @author Michael Garza, Gary LaMountain
+	 * @author Michael Garza (batch unknown), Gary LaMountain (batch unknown),
+	 *         Charlie Harris (1712-dec10-java-Steve)
 	 */
 	@GetMapping("getnumberofsubtopics")
 	public ResponseEntity<Long> getNumberOfSubTopicsByBatch(HttpServletRequest request) {
@@ -129,8 +135,9 @@ public class CalendarController {
 	 * 
 	 * @param request
 	 *            - Parameters: - batchId (int)
-	 * @return List of topics for the batch with the given id, HttpStatus.OK
-	 *         (200) if successful, BAD REQUEST (400) if missing parameters
+	 * @return List of topics for the batch with the given id, HttpStatus.OK (200)
+	 *         if successful, BAD REQUEST (400) if missing parameters
+	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
 	@GetMapping("topics")
 	public ResponseEntity<List<TopicWeek>> getTopicsByBatchPag(HttpServletRequest request) {
@@ -140,33 +147,39 @@ public class CalendarController {
 		}
 
 		int batchId = Integer.parseInt(batchIdParam);
-
-		return new ResponseEntity<List<TopicWeek>>(topicService.getTopicByBatchId(batchId), HttpStatus.OK);
+		
+		List<TopicWeek> topicLst = topicService.getTopicByBatchId(batchId);
+		if (topicLst.isEmpty()) {
+			return new ResponseEntity<List<TopicWeek>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<TopicWeek>>(topicLst, HttpStatus.OK);
 	}
-	
-	
+
 	/**
 	 * Updates the date for the given subtopic in the given batch
+	 * 
 	 * @param request
-	 * 	Parameters: subtopicId (int), batchId (int), date (long/date)
-	 * @return OK (200) if update occurs, NO CONTENT (204) if requested batch/subtopic does not exist, BAD REQUEST (400) if missing parameters
-	 * @throws ParseException
+	 *            Parameters: subtopicId (int), batchId (int), date (long/date)
+	 * @return OK (200) if update occurs, NO CONTENT (204) if requested
+	 *         batch/subtopic does not exist, BAD REQUEST (400) if missing
+	 *         parameters
+	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
 	@GetMapping("dateupdate")
-	public ResponseEntity<?> changeTopicDate(HttpServletRequest request) throws ParseException {
+	public ResponseEntity<?> changeTopicDate(HttpServletRequest request) {
 		String subtopicIdParam = request.getParameter(SUBTOPICID);
 		String batchIdParam = request.getParameter(BATCHID);
 		String newDateParam = request.getParameter(DATE);
 		if (subtopicIdParam == null || batchIdParam == null || newDateParam == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		int subtopicId = Integer.parseInt(request.getParameter("subtopicId"));
 		int batchId = Integer.parseInt(request.getParameter(BATCHID));
 		long newDate = Long.valueOf(newDateParam);
-		
+
 		List<Subtopic> topics = subtopicService.getSubtopicByBatchId(batchId);
-		for(Subtopic sub: topics) {
+		for (Subtopic sub : topics) {
 			if (sub.getSubtopicId() == subtopicId) {
 				sub.setSubtopicDate(new Timestamp(newDate + 46800000));
 				subtopicService.updateSubtopic(sub);
@@ -176,29 +189,31 @@ public class CalendarController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-
 	/**
 	 * Updates the status of the given subtopic in the given batch
+	 * 
 	 * @param request
-	 * 	Parameters: subtopicId (int), batchId (int), status (string)
-	 * @return
-	 * @throws ParseException
+	 *            Parameters: subtopicId (int), batchId (int), status (string)
+	 * @return OK (200) if update occurs, NO CONTENT (204) if requested
+	 *         batch/subtopic does not exist, BAD REQUEST (400) if missing
+	 *         parameters
+	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
 	@GetMapping("statusupdate")
-	public ResponseEntity<?> updateTopicStatus(HttpServletRequest request) throws ParseException {
+	public ResponseEntity<?> updateTopicStatus(HttpServletRequest request) {
 		String subtopicIdParam = request.getParameter(SUBTOPICID);
 		String batchIdParam = request.getParameter(BATCHID);
 		String statusParam = request.getParameter(STATUS);
 		if (subtopicIdParam == null || batchIdParam == null || statusParam == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		int subtopicId = Integer.parseInt(subtopicIdParam);
 		int batchId = Integer.parseInt(batchIdParam);
 		SubtopicStatus status = subtopicService.getStatus(statusParam);
 
 		List<Subtopic> topics = subtopicService.getSubtopicByBatchId(batchId);
-		for (Subtopic sub: topics) {
+		for (Subtopic sub : topics) {
 			if (sub.getSubtopicId() == subtopicId) {
 				sub.setStatus(status);
 				subtopicService.updateSubtopic(sub);
@@ -208,30 +223,35 @@ public class CalendarController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * Adds new topics from [topicsFromStub]
+	 * 
+	 * @param topicsFromStub
+	 *            JSON array of TopicName objects, each TopicName should contain at
+	 *            least a [name] field
+	 * @return CREATED (201) if a topic was added, OK (200) if the request was
+	 *         completed successfully but no topics were added
+	 * @author Charlie Harris (1712-dec10-java-Steve)
+	 */
 	@PostMapping("addtopics")
-	public ResponseEntity<?> addTopics(@RequestBody String jsonObject, HttpSession session) {
-		List<TopicName> topicsFromStub = null;
-
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-
-			topicsFromStub = mapper.readValue(jsonObject,
-					mapper.getTypeFactory().constructCollectionType(List.class, TopicName.class));
-		} catch (IOException e) {
-			LogManager.getRootLogger().error(e);
-		}
+	public ResponseEntity<?> addTopics(@RequestBody List<TopicName> topicsFromStub, HttpSession session) {
+		boolean topicAdded = false;
 		List<TopicName> allTopicsInBAM = topicService.getTopics();
-		for (int i = 0; i < topicsFromStub.size(); i++) {
+		for (TopicName newTopic : topicsFromStub) {
 			boolean found = false;
-			for (int j = 0; j < allTopicsInBAM.size(); j++) {
-				if (topicsFromStub.get(i).getName().equals(allTopicsInBAM.get(j).getName())) {
+			for (TopicName curTopic : allTopicsInBAM) {
+				if (curTopic.getName().equals(newTopic.getName())) {
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				topicService.addOrUpdateTopicName(topicsFromStub.get(i));
+				topicService.addOrUpdateTopicName(newTopic);
+				topicAdded = true;
 			}
+		}
+		if (topicAdded) {
+			return new ResponseEntity<>(HttpStatus.CREATED);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
