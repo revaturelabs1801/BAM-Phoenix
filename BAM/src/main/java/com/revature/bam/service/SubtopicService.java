@@ -162,7 +162,7 @@ public class SubtopicService {
    *          subtopicName
    * @author Brian McKalip
    */
-  public void addOrUpdateSubtopicName(SubtopicName subtopicName) {
-    subtopicNameRepository.save(subtopicName);
+  public SubtopicName addOrUpdateSubtopicName(SubtopicName subtopicName) {
+    return subtopicNameRepository.save(subtopicName);
   }
 }
