@@ -63,13 +63,13 @@ public class CurriculumController {
 		subtopicService = ss;
 	}
 	
-	@GetMapping(value = "all", produces = "application/json")
+	@GetMapping(value = "all")
 	@ResponseBody
 	public ResponseEntity<List<Curriculum>> getAllCurriculum(){
 		return new ResponseEntity<List<Curriculum>>(curriculumService.getAllCurriculum(), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "getcurriculum", produces = "application/json")
+	@GetMapping(value = "getcurriculum")
 	@ResponseBody
 	public ResponseEntity<Curriculum> getCurriculumById(HttpServletRequest request){
 		int curriculumId = Integer.parseInt(request.getParameter("curriculumId"));
@@ -77,7 +77,7 @@ public class CurriculumController {
 	}
 	
 	
-	@GetMapping(value = "schedule", produces = "application/json")
+	@GetMapping(value = "schedule")
 	@ResponseBody
 	public ResponseEntity<List<CurriculumSubtopic>> getAllCurriculumSchedules(HttpServletRequest request){
 		Curriculum c = new Curriculum();
@@ -85,13 +85,13 @@ public class CurriculumController {
 		return new ResponseEntity<List<CurriculumSubtopic>>(curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "topicpool", produces = "application/json")
+	@GetMapping(value = "topicpool")
 	@ResponseBody
 	public ResponseEntity<List<SubtopicName>> getTopicPool(){
 		return new ResponseEntity<List<SubtopicName>>(subtopicService.getAllSubtopics(), HttpStatus.OK) ;
 	}
 	
-	@GetMapping(value = "subtopicpool", produces = "application/json")
+	@GetMapping(value = "subtopicpool")
 	@ResponseBody
 	public	ResponseEntity<List<Subtopic>> getSubtopicPool(){
 		return new ResponseEntity<List<Subtopic>>( subtopicService.getSubtopics(), HttpStatus.OK);
