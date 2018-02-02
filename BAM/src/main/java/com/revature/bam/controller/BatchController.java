@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,8 +37,12 @@ public class BatchController {
 
   @RequestMapping(value = "All", method = RequestMethod.GET, produces = "application/json")
   @ResponseBody
-  public List<Batch> getBatchAll() {
-    return batchService.getBatchAll();
+  public ResponseEntity<List<Batch>> getBatchAll() {
+	  List<Batch> result = batchService.getBatchAll();
+		if(result != null && !result.isEmpty()) {
+			return new ResponseEntity<List<Batch>>(result, HttpStatus.OK);
+		}
+	  return new ResponseEntity<List<Batch>>(result, HttpStatus.NO_CONTENT);
   }
 
   @RequestMapping(value = "Past", method = RequestMethod.GET, produces = "application/json")
