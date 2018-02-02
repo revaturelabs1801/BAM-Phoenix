@@ -66,6 +66,10 @@ public class Subtopic {
 		this.status = status;
 		this.subtopicDate = subtopicDate;
 	}
+	
+	public Subtopic(int subtopicId) {
+		System.out.println(subtopicId);
+	}
 
 	public int getSubtopicId() {
 		return subtopicId;
