@@ -34,6 +34,11 @@
 
 
 	<dependencies>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>12.1.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.code.bean-matchers/bean-matchers -->
 		<dependency>
 			<groupId>com.google.code.bean-matchers</groupId>
@@ -84,15 +89,6 @@
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
-		</dependency>
-		<dependency>
-
-			<groupId>com.oracle</groupId>
-			
-			<artifactId>ojdbc7</artifactId>
-			
-			<version>12.1.0</version>
-			
 		</dependency>
 	</dependencies>
 
