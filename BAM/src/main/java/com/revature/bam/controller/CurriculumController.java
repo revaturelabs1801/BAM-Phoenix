@@ -7,10 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +33,7 @@ import com.revature.bam.service.CurriculumSubtopicService;
 import com.revature.bam.service.SubtopicService;
 
 @RestController
-@RequestMapping(value = "/api/v1/Curriculum/")
+@RequestMapping(value = "/curriculum/")
 public class CurriculumController {
 
 	@Autowired
@@ -60,41 +63,42 @@ public class CurriculumController {
 		subtopicService = ss;
 	}
 	
-	@RequestMapping(value = "All", method = RequestMethod.GET, produces = "application/json")
+	@GetMapping(value = "all", produces = "application/json")
 	@ResponseBody
-	public List<Curriculum> getAllCurriculum(){
-		return curriculumService.getAllCurriculum();
+	public ResponseEntity<List<Curriculum>> getAllCurriculum(){
+		return new ResponseEntity<List<Curriculum>>(curriculumService.getAllCurriculum(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "GetCurriculum", method = RequestMethod.GET, produces = "application/json")
+	@GetMapping(value = "getcurriculum", produces = "application/json")
 	@ResponseBody
-	public Curriculum getCurriculumById(HttpServletRequest request){
+	public ResponseEntity<Curriculum> getCurriculumById(HttpServletRequest request){
 		int curriculumId = Integer.parseInt(request.getParameter("curriculumId"));
-		return curriculumService.getCuricullumById(curriculumId);
+		return new ResponseEntity<Curriculum>(curriculumService.getCuricullumById(curriculumId), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "Schedule", method = RequestMethod.GET, produces = "application/json")
+	
+	@GetMapping(value = "schedule", produces = "application/json")
 	@ResponseBody
-	public List<CurriculumSubtopic> getAllCurriculumSchedules(HttpServletRequest request){
+	public ResponseEntity<List<CurriculumSubtopic>> getAllCurriculumSchedules(HttpServletRequest request){
 		Curriculum c = new Curriculum();
 		c.setCurriculumId(Integer.parseInt(request.getParameter("curriculumId")));
-		return curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
+		return new ResponseEntity<List<CurriculumSubtopic>>(curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "TopicPool", method = RequestMethod.GET, produces = "application/json")
+	@GetMapping(value = "topicpool", produces = "application/json")
 	@ResponseBody
-	public List<SubtopicName> getTopicPool(){
-		return subtopicService.getAllSubtopics();
+	public ResponseEntity<List<SubtopicName>> getTopicPool(){
+		return new ResponseEntity<List<SubtopicName>>(subtopicService.getAllSubtopics(), HttpStatus.OK) ;
 	}
 	
-	@RequestMapping(value = "SubtopicPool", method = RequestMethod.GET, produces = "application/json")
+	@GetMapping(value = "subtopicpool", produces = "application/json")
 	@ResponseBody
-	public List<Subtopic> getSubtopicPool(){
-		return subtopicService.getSubtopics();
+	public	ResponseEntity<List<Subtopic>> getSubtopicPool(){
+		return new ResponseEntity<List<Subtopic>>( subtopicService.getSubtopics(), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "AddCurriculum", method = RequestMethod.POST)
-	public void addSchedule(@RequestBody String json) throws JsonMappingException, IOException{
+	@PostMapping(value = "addcurriculum")
+	public ResponseEntity<?> addSchedule(@RequestBody String json) throws JsonMappingException, IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumSubtopicDTO c = mapper.readValue(json, CurriculumSubtopicDTO.class);
 		
@@ -126,10 +130,11 @@ public class CurriculumController {
 				}
 			}
 		}
+		return new ResponseEntity<>( HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value = "MakeMaster", method = RequestMethod.GET)
-	public void markCurriculumAsMaster(HttpServletRequest request){
+	@GetMapping(value = "makemaster")
+	public ResponseEntity<?> markCurriculumAsMaster(HttpServletRequest request){
 		Curriculum c = curriculumService.getCuricullumById(Integer.parseInt(request.getParameter("curriculumId")));
 		c.setIsMaster(1);
 		
@@ -155,11 +160,13 @@ public class CurriculumController {
 		
 		//save new master curriculum
 		curriculumService.save(c);
+		
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
 	//syncs a curriculum with batch from Assignforce
-	@RequestMapping(value = "SyncBatch/{id}", method = RequestMethod.GET)
-	public void syncBatch(@PathVariable int id) throws CustomException{
+	@GetMapping(value = "syncbatch/{id}")
+	public ResponseEntity<?> syncBatch(@PathVariable int id) throws CustomException{
 		Batch currBatch = batchService.getBatchById(id);
 		String batchType = currBatch.getType().getName();
 		
@@ -196,6 +203,7 @@ public class CurriculumController {
 		}else{
 			throw new CustomException("Batch already synced");
 		}
+		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
 	}
-
+	
 }
