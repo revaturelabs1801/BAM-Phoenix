@@ -18,30 +18,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Component
 @Entity
-@Table(name = "Curriculum_Subtopic")
+@Table(name = "CURRICULUM_SUBTOPIC")
 public class CurriculumSubtopic {
 	
 	@Id
-	@Column(name = "Curriculum_Subtopic_Id")
-	@SequenceGenerator(name = "Curriculum_Subtopic_ID_SEQ", sequenceName = "Curriculum_Subtopic_ID_SEQ", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Curriculum_Subtopic_ID_SEQ")
+	@Column(name = "CURRICULUM_SUBTOPIC_ID")
+	@SequenceGenerator(name = "CURRICULUM_SUBTOPIC_ID_SEQ", sequenceName = "CURRICULUM_SUBTOPIC_ID_SEQ", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CURRICULUM_SUBTOPIC_ID_SEQ")
 	private int curriculumSubtopicId;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "curriculum_Subtopic_Name_Id", referencedColumnName = "Subtopic_Name_Id")
+	@JoinColumn(name = "CURRICULUM_SUBTOPIC_NAME_ID", referencedColumnName = "SUBTOPIC_NAME_ID")
 	@NotNull(message="Curriculum Subtopic Name cannot be null")
 	private SubtopicName curriculumSubtopicNameId;
 
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "curriculum_Subtopic_Cur_Id", referencedColumnName = "Curriculum_Id")
+	@JoinColumn(name = "CURRICULUM_SUBTOPIC_CUR_ID", referencedColumnName = "CURRICULUM_ID")
 	private Curriculum curriculum;
 
 	
-	@Column(name = "Curriculum_Week")
+	@Column(name = "CURRICULUM_WEEK")
 	private int curriculumSubtopicWeek;
 	
-	@Column(name = "Curriculum_Day")
+	@Column(name = "CURRICULUM_DAY")
 	private int curriculumSubtopicDay;
 	
 	public CurriculumSubtopic() {

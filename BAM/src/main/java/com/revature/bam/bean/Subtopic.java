@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class Subtopic {
 
 	@Id
-	@Column(name = "Subtopic_Id")
+	@Column(name = "SUBTOPIC_ID")
 	@SequenceGenerator(name = "SUBTOPIC_SEQ", sequenceName = "SUBTOPIC_SEQ")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SUBTOPIC_SEQ")
 	private int subtopicId;
@@ -42,7 +42,7 @@ public class Subtopic {
 	@Autowired
 	private SubtopicStatus status;
 
-	@Column(name = "Subtopic_Date")
+	@Column(name = "SUBTOPIC_DATE")
 	private Timestamp subtopicDate;
 
 	public Subtopic() {
