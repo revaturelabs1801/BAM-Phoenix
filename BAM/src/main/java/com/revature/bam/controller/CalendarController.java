@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -74,9 +75,12 @@ public class CalendarController {
 		int batchId = Integer.parseInt(batchIdParam);
 		int pageNum = Integer.parseInt(pageNumParam);
 		int pageSiz = Integer.parseInt(pageSizeParam);
-
-		return new ResponseEntity<List<Subtopic>>(
-				subtopicService.findByBatchId(batchId, new PageRequest(pageNum, pageSiz)), HttpStatus.OK);
+		
+		List<Subtopic> subtopicLst = subtopicService.findByBatchId(batchId, new PageRequest(pageNum, pageSiz));
+		if (subtopicLst.isEmpty()) {
+			return new ResponseEntity<List<Subtopic>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<Subtopic>>(subtopicLst, HttpStatus.OK);
 	}
 
 	/**
@@ -96,8 +100,12 @@ public class CalendarController {
 		}
 
 		int batchId = Integer.parseInt(batchIdParam);
-
-		return new ResponseEntity<List<Subtopic>>(subtopicService.getSubtopicByBatchId(batchId), HttpStatus.OK);
+		
+		List<Subtopic> subtopicLst = subtopicService.getSubtopicByBatchId(batchId);
+		if (subtopicLst.isEmpty()) {
+			return new ResponseEntity<List<Subtopic>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<Subtopic>>(subtopicLst, HttpStatus.OK);
 	}
 
 	/**
@@ -139,8 +147,12 @@ public class CalendarController {
 		}
 
 		int batchId = Integer.parseInt(batchIdParam);
-
-		return new ResponseEntity<List<TopicWeek>>(topicService.getTopicByBatchId(batchId), HttpStatus.OK);
+		
+		List<TopicWeek> topicLst = topicService.getTopicByBatchId(batchId);
+		if (topicLst.isEmpty()) {
+			return new ResponseEntity<List<TopicWeek>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<TopicWeek>>(topicLst, HttpStatus.OK);
 	}
 
 	/**
@@ -182,8 +194,9 @@ public class CalendarController {
 	 * 
 	 * @param request
 	 *            Parameters: subtopicId (int), batchId (int), status (string)
-	 * @return OK (200) if update successful, NO CONTENT (204) if requested
-	 *         subtopic/batch do not exist, BAD REQUEST (400) if missing parameters
+	 * @return OK (200) if update occurs, NO CONTENT (204) if requested
+	 *         batch/subtopic does not exist, BAD REQUEST (400) if missing
+	 *         parameters
 	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
 	@GetMapping("statusupdate")
@@ -221,15 +234,13 @@ public class CalendarController {
 	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
 	@PostMapping("addtopics")
-	public ResponseEntity<?> addTopics(@RequestBody List<TopicName> topicsFromStub) {
-		System.out.println(topicsFromStub);
+	public ResponseEntity<?> addTopics(@RequestBody List<TopicName> topicsFromStub, HttpSession session) {
 		boolean topicAdded = false;
 		List<TopicName> allTopicsInBAM = topicService.getTopics();
 		for (TopicName newTopic : topicsFromStub) {
 			boolean found = false;
 			for (TopicName curTopic : allTopicsInBAM) {
 				if (curTopic.getName().equals(newTopic.getName())) {
-					System.out.println("TOPIC ALREADY EXISTS");
 					found = true;
 					break;
 				}

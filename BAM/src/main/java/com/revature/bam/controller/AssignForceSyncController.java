@@ -14,6 +14,10 @@ public class AssignForceSyncController {
   @Autowired
   AssignForceSyncService service;
 
+  /**
+   * Syncs batch information from assignforce
+   * @return RESET CONTENT (205)
+   */
   @GetMapping("/refreshbatches")
   public ResponseEntity<?> refreshBatches() {
 	  service.assignForceSync();
