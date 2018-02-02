@@ -26,7 +26,7 @@ public class SubTopicController {
 	SubtopicService subTopicService;
 
 /**
- * @author Cristian Hermida
+ * @author Cristian Hermida / Batch 1712-dec10-java-steve
  * 
  * @param request
  * 			- I request must have to have the name of the topic.
