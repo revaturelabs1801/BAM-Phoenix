@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,7 @@ import com.revature.bam.service.TopicService;
 
 @RestController
 @RequestMapping(value = "calendar/")
+@CrossOrigin(origins="*")
 public class CalendarController {
 
 	private static final String BATCHID = "batchId";
@@ -165,7 +167,7 @@ public class CalendarController {
 	 *         parameters
 	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
-	@GetMapping("dateupdate")
+	@PostMapping("dateupdate")
 	public ResponseEntity<?> changeTopicDate(HttpServletRequest request) {
 		String subtopicIdParam = request.getParameter(SUBTOPICID);
 		String batchIdParam = request.getParameter(BATCHID);
@@ -181,13 +183,14 @@ public class CalendarController {
 		List<Subtopic> topics = subtopicService.getSubtopicByBatchId(batchId);
 		for (Subtopic sub : topics) {
 			if (sub.getSubtopicId() == subtopicId) {
-				sub.setSubtopicDate(new Timestamp(newDate + 46800000));
+				sub.setSubtopicDate(new Timestamp(newDate));
 				subtopicService.updateSubtopic(sub);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+
 
 	/**
 	 * Updates the status of the given subtopic in the given batch

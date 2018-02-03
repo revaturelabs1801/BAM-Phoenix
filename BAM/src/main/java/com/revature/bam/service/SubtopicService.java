@@ -87,7 +87,7 @@ public class SubtopicService {
    * @author Samuel Louis-Pierre, Avant Mathur
    */
   public void updateSubtopic(Subtopic subtopic) {
-    Long newDate = subtopic.getSubtopicDate().getTime() + 46800000;
+    Long newDate = subtopic.getSubtopicDate().getTime();
     subtopic.setSubtopicDate(new Timestamp(newDate));
 
     subtopicRepository.save(subtopic);

@@ -34,11 +34,11 @@
 
 
 	<dependencies>
-<!-- 		<dependency>
+		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc7</artifactId>
 			<version>12.1.0</version>
-		</dependency> -->
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.code.bean-matchers/bean-matchers -->
 		<dependency>
 			<groupId>com.google.code.bean-matchers</groupId>
