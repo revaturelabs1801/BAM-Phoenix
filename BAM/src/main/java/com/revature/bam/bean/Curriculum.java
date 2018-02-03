@@ -16,38 +16,38 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Entity
-@Table(name = "Curriculum")
+@Table(name = "CURRICULUM")
 public class Curriculum {
 	
 	@Id
-	@Column(name = "Curriculum_Id")
-	@SequenceGenerator(name = "Curriculum_ID_SEQ", sequenceName = "Curriculum_ID_SEQ", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Curriculum_ID_SEQ")
+	@Column(name = "CURRICULUM_ID")
+	@SequenceGenerator(name = "CURRICULUM_ID_SEQ", sequenceName = "CURRICULUM_ID_SEQ", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CURRICULUM_ID_SEQ")
 	private Integer id;
 	
-	@Column(name= "Curriculum_name")
+	@Column(name= "CURRICULUM_NAME")
 	@NotEmpty(message = "Curriculum name cannot be empty")
 	private String curriculumName;
 	
-	@Column(name ="Curriculum_version")
+	@Column(name ="CURRICULUM_VERSION")
 	private int curriculumVersion;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "Curriculum_Creator", referencedColumnName = "User_Id")
+	@JoinColumn(name = "CURRICULUM_CREATOR", referencedColumnName = "USER_ID")
 	private BamUser curriculumCreator;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "Curriculum_Modifier", referencedColumnName = "User_Id")
+	@JoinColumn(name = "CURRICULUM_MODIFIER", referencedColumnName = "USER_ID")
 	private BamUser curriculumModifier;
 	
-	@Column(name = "Curriculum_Date_Created")
+	@Column(name = "CURRICULUM_DATE_CREATED")
 	@NotEmpty(message = "Curriculum Date Created cannot be empty")
 	private String curriculumdateCreated;
 	
-	@Column(name = "Curriculum_Number_Of_Weeks")
+	@Column(name = "CURRICULUM_NUMBER_OF_WEEKS")
 	private int curriculumNumberOfWeeks;
 	
-	@Column(name = "Curriculum_Is_Master")
+	@Column(name = "CURRICULUM_IS_MASTER")
 	private int isMaster;
 	
 	public Curriculum(){

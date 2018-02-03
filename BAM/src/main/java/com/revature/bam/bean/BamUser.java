@@ -14,19 +14,19 @@ import org.springframework.stereotype.Component;
 public class BamUser {
 
 	@Id
-	@Column(name = "User_Id")
+	@Column(name = "USER_ID")
 	@SequenceGenerator(name = "USERID_SEQ", sequenceName = "USERID_SEQ")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERID_SEQ")
 	private int userId;
 
-	@Column(name = "First_Name")
+	@Column(name = "FIRST_NAME")
 	@NotEmpty(message = "First name cannot be empty")
 	private String fName;
 
-	@Column(name = "Middle_Name")
+	@Column(name = "MIDDLE_NAME")
 	private String mName;
 
-	@Column(name = "Last_Name")
+	@Column(name = "LAST_NAME")
 	@NotEmpty(message = "Last name cannot be empty")
 	private String lName;
 
@@ -34,11 +34,11 @@ public class BamUser {
 	@NotEmpty(message = "e-mail address cannot be empty")
 	private String email;
 
-	@Column(name = "Password")
+	@Column(name = "PASSWORD")
 	@NotEmpty(message="Password cannot be empty")
 	private String pwd;
 	
-	@Column(name = "Role") // Role 1 is for associates // Role 2 is for trainers & QC
+	@Column(name = "ROLE") // Role 1 is for associates // Role 2 is for trainers & QC
 	private int role; // Role 3 is for admins
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -48,17 +48,17 @@ public class BamUser {
 							// null for
 							// trainers and admins. A trainer is assigned in the
 							// Batches table.
-	@Column(name = "Main_Phone")
+	@Column(name = "MAIN_PHONE")
 	@NotEmpty(message = "Primary phone cannot be empty")
 	private String phone;
 
-	@Column(name = "Second_Phone")
+	@Column(name = "SECOND_PHONE")
 	private String phone2;
 
-	@Column(name = "Skype_ID")
+	@Column(name = "SKYPE_ID")
 	private String skype;
 
-	@Column(name = "Password_Bak") // This is a backup password that will be
+	@Column(name = "PASSWORD_BAK") // This is a backup password that will be
 									// used when
 	private String pwd2; // the user needs to reset their password.
 

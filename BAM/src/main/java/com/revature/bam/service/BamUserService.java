@@ -19,8 +19,8 @@ public class BamUserService {
   @Autowired
   BatchRepository batchRepository;
 
-  public void addOrUpdateUser(BamUser user) {
-    bamUserRepository.save(user);
+  public BamUser addOrUpdateUser(BamUser user) {
+    return bamUserRepository.save(user);
   }
 
   public List<BamUser> findAllUsers() {

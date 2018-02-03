@@ -35,8 +35,8 @@ public class BatchService {
 	@Autowired
 	SubtopicService subtopicService;
 	
-	public void addOrUpdateBatch(Batch b) {
-		batchRepository.save(b);
+	public Batch addOrUpdateBatch(Batch b) {
+		return batchRepository.save(b);
 	}
 
 	public Batch getBatchById(Integer id) {
