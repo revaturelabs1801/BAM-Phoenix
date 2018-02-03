@@ -51,8 +51,8 @@ public class TopicService {
     return topicNameRepository.findAll();
   }
 
-  public void addOrUpdateTopicName(TopicName topic) {
-    topicNameRepository.save(topic);
+  public TopicName addOrUpdateTopicName(TopicName topic) {
+    return topicNameRepository.save(topic);
   }
 
   public TopicName getTopicName(int id) {
