@@ -14,11 +14,15 @@ public class AssignForceSyncController {
 	@Autowired
 	AssignForceSyncService service;
 	
-	
-	@GetMapping("/refreshBatches")
-	public ResponseEntity<?> refreshBatches() {
-		service.assignForceSync();
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+
+  /**
+   * Syncs batch information from assignforce
+   * @return RESET CONTENT (205)
+   */
+  @GetMapping("/refreshbatches")
+  public ResponseEntity<?> refreshBatches() {
+	  service.assignForceSync();
+	  return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+  }
 
 }

@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/index.html", "/static/**", "/", "/**");
 	 }
 
-
+	 
 	/***
 	 * @author Nam Mai
 	 * References the authProvider to enable hashing
