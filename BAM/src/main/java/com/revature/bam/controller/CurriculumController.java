@@ -34,7 +34,6 @@ import com.revature.bam.service.SubtopicService;
 
 @RestController
 @RequestMapping(value = "curriculum/")
-
 public class CurriculumController {
 
 	@Autowired
