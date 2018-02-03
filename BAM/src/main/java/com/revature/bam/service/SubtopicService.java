@@ -84,7 +84,7 @@ public class SubtopicService {
    *          To handle timezone offset, before submission to DB,
    *          adding offset to date and updating date.
    * 
-   * @author Samuel Louis-Pierre, Avant Mathur
+   * @author Samuel Louis-Pierre, Avant Mathur, (1712-dec10-java-Steve) Jordan DeLong 
    */
   public void updateSubtopic(Subtopic subtopic) {
     Long newDate = subtopic.getSubtopicDate().getTime();

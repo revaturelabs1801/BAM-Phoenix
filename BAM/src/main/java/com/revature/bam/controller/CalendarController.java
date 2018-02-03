@@ -165,7 +165,7 @@ public class CalendarController {
 	 * @return OK (200) if update occurs, NO CONTENT (204) if requested
 	 *         batch/subtopic does not exist, BAD REQUEST (400) if missing
 	 *         parameters
-	 * @author Charlie Harris (1712-dec10-java-Steve)
+	 * @author (1712-dec10-java-Steve) Charlie Harris, Jordan DeLong 
 	 */
 	@PostMapping("dateupdate")
 	public ResponseEntity<?> changeTopicDate(HttpServletRequest request) {
