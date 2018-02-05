@@ -2,17 +2,22 @@ package com.revature.bam.controller;
 
 import java.io.IOException;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.revature.bam.bean.BamUser;
 import com.revature.bam.bean.Batch;
 import com.revature.bam.service.BamUserService;
@@ -21,6 +26,7 @@ import com.revature.bam.service.PasswordGenerator;
 
 @RestController
 @RequestMapping(value = "users/")
+@CrossOrigin
 public class UserController {
 	
 	private static final String USERID = "userId";
@@ -98,7 +104,7 @@ public class UserController {
 
 		// Drop user from the batch
 		user.setBatch(null);
-		user.setRole(0);
+		user.setRole(0);//0 role does not exist in database, use 1 to test method checks good.
 		userService.addOrUpdateUser(user);
 
 		// Return users from batch without the user
@@ -240,7 +246,7 @@ public class UserController {
 	 * @return BamUser
 	 */
 	@PostMapping("recovery")
-    public ResponseEntity<BamUser> recoverPassword(@RequestBody String email){
+    public ResponseEntity<BamUser> recoverPassword(@RequestParam String email){
         // Lookup user in database by e-mail
         BamUser user = userService.findUserByEmail(email);
         if (user != null) {
@@ -249,9 +255,9 @@ public class UserController {
         	user.setPwd(hashed);
         	userService.addOrUpdateUser(user);
         	userService.recoverE(user, generate);
-        	return new ResponseEntity<BamUser>(HttpStatus.ACCEPTED);
+        	return new ResponseEntity<BamUser>(user,HttpStatus.ACCEPTED);
         } else { 
-        	return new ResponseEntity<BamUser>(HttpStatus.BAD_REQUEST);
+        	return new ResponseEntity<BamUser>(user,HttpStatus.BAD_REQUEST);
         }
     }
 
