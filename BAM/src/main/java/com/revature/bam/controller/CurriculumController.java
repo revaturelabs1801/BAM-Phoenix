@@ -226,12 +226,11 @@ public class CurriculumController {
 		Curriculum c = new Curriculum();
 
 		try {
-			c = curriculumService.getCuricullumById(cId);
+			c = curriculumService.getCuricullumByIdKeepPwd(cId);	
+			System.out.println(c);
 		} catch (NullPointerException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-
-		c.setIsMaster(1);
 
 		// find the curriculum with same name and isMaster = 1; set to 0; save
 		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(c.getCurriculumName());
@@ -254,6 +253,7 @@ public class CurriculumController {
 		}
 
 		// save new master curriculum
+		c.setIsMaster(1);
 		curriculumService.save(c);
 
 		return new ResponseEntity<>(HttpStatus.ACCEPTED);
