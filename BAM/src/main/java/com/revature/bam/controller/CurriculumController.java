@@ -53,7 +53,8 @@ public class CurriculumController {
 	}
 
 	/***
-	 * @author Nam Mai Method is needed for injecting mocked services for unit test
+	 * @author Nam Mai 
+	 * Method is needed for injecting mocked services for unit test
 	 */
 	@Autowired
 	public CurriculumController(CurriculumService cs, CurriculumSubtopicService css, SubtopicService ss) {
@@ -227,7 +228,6 @@ public class CurriculumController {
 
 		try {
 			c = curriculumService.getCuricullumByIdKeepPwd(cId);	
-			System.out.println(c);
 		} catch (NullPointerException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
