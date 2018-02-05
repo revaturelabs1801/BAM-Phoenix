@@ -87,17 +87,20 @@ public class CurriculumController {
 	 * 		HttpStatus.NO_CONTENT if id doesn't match, 
 	 * 		HttpStatus.BAD_REQUEST if missing parameters
 	 */
-	@GetMapping(value = "getcurriculum")
+	@GetMapping(value = "getcurriculum/{cId}")
 	@ResponseBody
-	public ResponseEntity<Curriculum> getCurriculumById(HttpServletRequest request){
-		String paramId = request.getParameter("curriculumId");
-		if(paramId == null) {
+	public ResponseEntity<Curriculum> getCurriculumById(@PathVariable int cId){
+
+		
+		Curriculum result = new Curriculum();
+		
+		try {
+			curriculumService.getCuricullumById(cId);
+		}catch  (NullPointerException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		int curriculumId = Integer.parseInt(paramId);
-		Curriculum result = curriculumService.getCuricullumById(curriculumId);
 		
-		if(result != null) {
+	if(result != null) {
 			return new ResponseEntity<Curriculum>(result, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -112,16 +115,21 @@ public class CurriculumController {
 	 * 		HttpStatus.NO_CONTENT if id doesn't match, 
 	 * 		HttpStatus.BAD_REQUEST if missing parameters
 	 */
-	@GetMapping(value = "schedule")
+	@GetMapping(value = "schedule/{cId}")
 	@ResponseBody
-	public ResponseEntity<List<CurriculumSubtopic>> getAllCurriculumSchedules(HttpServletRequest request){
-		String paramId = request.getParameter("curriculumId");
-		if(paramId == null) {
+	public ResponseEntity<List<CurriculumSubtopic>> getAllCurriculumSchedules(@PathVariable int cId){
+		
+		Curriculum c = new Curriculum();
+		
+		
+		
+		try {
+			curriculumService.getCuricullumById(cId);
+		}catch  (NullPointerException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		int curriculumId = Integer.parseInt(paramId);
-		Curriculum c = new Curriculum();
-		c.setCurriculumId(curriculumId);
+		
+		c.setCurriculumId(cId);
 		
 		List<CurriculumSubtopic> result = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
 		if (result != null && !result.isEmpty()) {
@@ -216,15 +224,20 @@ public class CurriculumController {
 	 * @return HttpStatus.BAD_REQUEST if missing parameter,
 	 * 		HttpStatus.ACCEPTED if successful
 	 */
-	@GetMapping(value = "makemaster")
-	public ResponseEntity<?> markCurriculumAsMaster(HttpServletRequest request){
-		String paramId = request.getParameter("curriculumId");
-		if(paramId == null)
+	@GetMapping(value = "makemaster/{cId}")
+	public ResponseEntity<?> markCurriculumAsMaster(@PathVariable int cId){
+		
+		Curriculum c = new Curriculum();
+		
+		try {
+			 curriculumService.getCuricullumById(cId);
+			
+		}catch (NullPointerException e){
+			
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+		}
 		
-		int currId = Integer.parseInt(paramId);
-		
-		Curriculum c = curriculumService.getCuricullumById(currId);
 		c.setIsMaster(1);
 		
 		//find the curriculum with same name and isMaster = 1; set to 0; save
