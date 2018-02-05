@@ -261,7 +261,7 @@ public class CurriculumController {
 
 	/**
 	 * @author Carter Taylor (1712-Steve)
-	 * @param PathVariabel int id
+	 * @param PathVariable int id
 	 *            batch id given as path variable 
 	 * syncBatch: sync batch by getting
 	 *            list of curriculum subtopics related to that batch type
