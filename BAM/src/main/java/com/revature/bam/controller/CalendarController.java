@@ -26,7 +26,7 @@ import com.revature.bam.service.TopicService;
 
 @RestController
 @RequestMapping(value = "calendar/")
-@CrossOrigin(origins="*")
+@CrossOrigin
 public class CalendarController {
 
 	private static final String BATCHID = "batchId";
