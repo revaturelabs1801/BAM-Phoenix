@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class ServiceAndControllerLogger {
 
 	private static final Logger logger = LogManager.getLogger(ServiceAndControllerLogger.class);
-	
+
 	@Before("execution (* com.revature.bam.controller.*.*(..))")
 	public void beforeControllerMethod(JoinPoint jp) {
 		logger.debug("\r\n\n\n");
@@ -44,15 +44,16 @@ public class ServiceAndControllerLogger {
 	
 	@After("execution (* com.revature.bam.service.*.*(..))")
 	public void afterServiceMethod(JoinPoint jp) {
-		logger.debug("END SERVICE - After " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
+		logger.debug("END SERVICE - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
 	}
 	
 	@Around("execution (* com.revature.bam.controller.*.*(..)) ||"
 		  + "execution (* com.revature.bam.service.*.*(..))")
-	public void classNameAndTime(ProceedingJoinPoint pjp) throws Throwable {
+	public Object classNameAndTime(ProceedingJoinPoint pjp) throws Throwable {
 		long start = System.currentTimeMillis();
-		pjp.proceed();
+		Object object = pjp.proceed();
 		long end = System.currentTimeMillis();
 		logger.debug("Total time: " + (end-start) + " milliseconds.");
+		return object;
 	}
 }
