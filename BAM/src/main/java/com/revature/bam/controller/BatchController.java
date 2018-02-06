@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,10 +64,10 @@ public class BatchController {
  * @param request Http request hold the trainer email as parameter.
  * @return a list of all past batches for the trainer, Http status 200 otherwise Http status 204
  */
-@GetMapping("past")
-  @ResponseBody
-  public ResponseEntity<List<Batch>> getPastBatches(HttpServletRequest request) {
-    List<Batch> batches = batchService.getBatchByTrainer(bamUserService.findUserByEmail(request.getParameter(EMAIL)));
+@GetMapping("past/{email}")
+  public ResponseEntity<List<Batch>> getPastBatches(@PathVariable String email) {
+	System.out.println(email);
+    List<Batch> batches = batchService.getBatchByTrainer(bamUserService.findUserByEmail(email));
 
     List<Batch> pastBatches = new ArrayList<>();
     for (Batch b : batches) {
@@ -86,10 +87,9 @@ public class BatchController {
  * @param request Http request hold the trainer email as parameter.
  * @return a list of all future batches for the trainer, Http status 200 otherwise Http status 204
  */
-@GetMapping("future")
-  @ResponseBody
-  public ResponseEntity<List<Batch>> getFutureBatches(HttpServletRequest request) {
-    List<Batch> batches = batchService.getBatchByTrainer(bamUserService.findUserByEmail(request.getParameter(EMAIL)));
+@GetMapping("future/{email}")
+  public ResponseEntity<List<Batch>> getFutureBatches(@PathVariable String email) {
+    List<Batch> batches = batchService.getBatchByTrainer(bamUserService.findUserByEmail(email));
 
     List<Batch> futureBatches = new ArrayList<>();
     for (Batch b : batches) {
@@ -110,10 +110,9 @@ public class BatchController {
  * @param request Http request hold the trainer email as parameter.
  * @return a list of all in-progress batches for the trainer, Http status 200 otherwise Http status 204
  */
-@GetMapping("inprogress")
-  @ResponseBody
-  public ResponseEntity<Batch> getBatchInProgress(HttpServletRequest request) {
-    List<Batch> batches = batchService.getBatchByTrainer(bamUserService.findUserByEmail(request.getParameter(EMAIL)));
+@GetMapping("inprogress/{email}")
+  public ResponseEntity<Batch> getBatchInProgress(@PathVariable String email) {
+    List<Batch> batches = batchService.getBatchByTrainer(bamUserService.findUserByEmail(email));
 
     Batch batchInProgress = null;
     Timestamp t = new Timestamp(System.currentTimeMillis());
@@ -135,10 +134,9 @@ public class BatchController {
  * @param request Http request hold the trainer email as parameter.
  * @return a list of all in-progress batches for the trainer, Http status 200 otherwise Http status 204
  */
-@GetMapping("allinprogress")
-  @ResponseBody
-  public ResponseEntity<List<Batch>> getAllBatchesInProgress(HttpServletRequest request) {
-    List<Batch> batches = batchService.getBatchByTrainer(bamUserService.findUserByEmail(request.getParameter(EMAIL)));
+@GetMapping("allinprogress/{email}")
+  public ResponseEntity<List<Batch>> getAllBatchesInProgress(@PathVariable String email) {
+    List<Batch> batches = batchService.getBatchByTrainer(bamUserService.findUserByEmail(email));
 
     List<Batch> batchesInProgress = new ArrayList<>();
     Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -160,10 +158,9 @@ public class BatchController {
  * @param request Http request hold the batch id as parameter.
  * @return a batch , Http status 200 otherwise Http status 204.
  */
-@GetMapping("byid")
-  @ResponseBody
-  public ResponseEntity<Batch> getBatchById(HttpServletRequest request) {
-	  Batch result = batchService.getBatchById(Integer.parseInt(request.getParameter("batchId")));
+@GetMapping("byid/{batchId}")
+  public ResponseEntity<Batch> getBatchById(@PathVariable int batchId) {
+	  Batch result = batchService.getBatchById(batchId);
 	  if ( result != null) {
 		  return new ResponseEntity<Batch>(result, HttpStatus.OK); 
 	  }
@@ -180,9 +177,9 @@ public class BatchController {
   public ResponseEntity<?> updateBatch(@RequestBody Batch batch) {
     Batch result = batchService.addOrUpdateBatch(batch);
     if ( result != null) {
-		  return new ResponseEntity<Batch>(HttpStatus.ACCEPTED); 
+		  return new ResponseEntity<>(HttpStatus.ACCEPTED); 
 	  }
-	  return  new ResponseEntity<Batch>(HttpStatus.BAD_REQUEST);
+	  return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     
   }
 
@@ -192,7 +189,6 @@ public class BatchController {
  * @return a list of batch types, Http status 200 otherwise Http status 204
  */
 @GetMapping("batchtypes")
-  @ResponseBody
   public ResponseEntity<List<BatchType>> getAllBatchTypes() {
 	  List<BatchType> result = batchService.getAllBatchTypes();
 	  if ( result != null) {

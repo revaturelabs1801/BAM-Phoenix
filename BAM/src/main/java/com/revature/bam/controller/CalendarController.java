@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,20 +66,14 @@ public class CalendarController {
 	 *         subtopicService.findByBatchId(batchId, new
 	 *         PageRequest(pageNum,pageSiz, Direction.DESC, "subtopicDate"));
 	 */
-	@GetMapping("subtopicspagination")
-	public ResponseEntity<List<Subtopic>> getSubtopicsByBatchPagination(HttpServletRequest request) {
-		String batchIdParam = request.getParameter(BATCHID);
-		String pageNumParam = request.getParameter(PAGENUMBER);
-		String pageSizeParam = request.getParameter(PAGESIZE);
-		if (batchIdParam == null || pageNumParam == null || pageSizeParam == null) {
+	@GetMapping("subtopicspagination/{batchId}/{pageNumber}/{pageSize}")
+	public ResponseEntity<List<Subtopic>> getSubtopicsByBatchPagination(@PathVariable Integer batchId, @PathVariable Integer pageNumber, @PathVariable Integer pageSize) {
+		System.out.println(batchId + " " + pageNumber + " " + pageSize);
+		if (batchId == null || pageNumber == null || pageSize == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-
-		int batchId = Integer.parseInt(batchIdParam);
-		int pageNum = Integer.parseInt(pageNumParam);
-		int pageSiz = Integer.parseInt(pageSizeParam);
 		
-		List<Subtopic> subtopicLst = subtopicService.findByBatchId(batchId, new PageRequest(pageNum, pageSiz));
+		List<Subtopic> subtopicLst = subtopicService.findByBatchId(batchId, new PageRequest(pageNumber, pageSize));
 		if (subtopicLst.isEmpty()) {
 			return new ResponseEntity<List<Subtopic>>(HttpStatus.NO_CONTENT);
 		}
