@@ -12,11 +12,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * 
- * @author Allan Poindexter / Batch : 1712_dec11th_Java_Steve
+ * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
  * 
- * Each method call, section off a portion in the log and display the runtime.
- * For readability's sake Controller calls will be separated by three lines.
- * Lastly, print the runtime.
+ * Generic Logger to indicate the start and end of Controllers and Methods.
  */
 @Aspect
 @Component
@@ -24,12 +22,26 @@ public class ServiceAndControllerLogger {
 
 	private static final Logger logger = LogManager.getLogger(ServiceAndControllerLogger.class);
 
+	/**
+	 * Writes the start of a Controller method call.
+	 * 
+	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
+	 * @param jp
+	 * 		-The Controller Method
+	 */
 	@Before("execution (* com.revature.bam.controller.*.*(..))")
 	public void beforeControllerMethod(JoinPoint jp) {
 		logger.debug("\r\n\n\n");
 		logger.debug("START CONTROLLER - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
 	}
 	
+	/**
+	 * Writes the end of a Controller method call.
+	 * 
+	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
+	 * @param jp
+	 * 		-The Controller Method
+	 */
 	@After("execution (* com.revature.bam.controller.*.*(..))")
 	public void afterControllerMethod(JoinPoint jp) {
 		logger.debug("END CONTROLLER - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
@@ -37,16 +49,43 @@ public class ServiceAndControllerLogger {
 	}
 	
 	
+	/**
+	 * Writes the start of a Service method call.
+	 * 
+	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
+	 * @param jp
+	 * 		-The Service Method
+	 */
 	@Before("execution (* com.revature.bam.service.*.*(..))")
 	public void beforeServiceMethod(JoinPoint jp) {
 		logger.debug("START SERVICE - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
 	}
 	
+	/**
+	 * Writes the end of a Service method call.
+	 * 
+	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
+	 * @param jp
+	 * 		-The Service Method
+	 */
 	@After("execution (* com.revature.bam.service.*.*(..))")
 	public void afterServiceMethod(JoinPoint jp) {
 		logger.debug("END SERVICE - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
 	}
 	
+	/**
+	 * Displays the run time for Service or Controller methods.
+	 * For the Controller, it will display the total runtime.
+	 * 
+	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
+	 * @param pjp
+	 * 		- The Service or Controller Methods
+	 * @return
+	 * 		- object. This is required, or else the controller will return a blank JSON object,
+	 * 				  or a service will throw a NullPointerException.
+	 * @throws
+	 * 		- Throwable. This is required when using PreceedingJoinPoint.proceed()
+	 */
 	@Around("execution (* com.revature.bam.controller.*.*(..)) ||"
 		  + "execution (* com.revature.bam.service.*.*(..))")
 	public Object classNameAndTime(ProceedingJoinPoint pjp) throws Throwable {
