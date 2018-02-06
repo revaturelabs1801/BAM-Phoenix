@@ -34,6 +34,19 @@ public class CurriculumService {
 		return curriculum;
 	}
 	
+	/**
+	 * @author Carter Taylor (1712-Steve)
+	 * @param id curriculumId
+	 * getCuricullumByIdKeepPwd: this method is necessary when updating curriculums server side.
+	 * 		Setting the curriculumCreator's password to empty throws ConstraintViolationException when 
+	 * 		updating the corresponding curriculum.
+	 * @return curriculum object
+	 */
+	public Curriculum getCuricullumByIdKeepPwd(Integer id){
+		Curriculum curriculum = curriculumRepository.findById(id);
+		return curriculum;
+	}
+	
 	public void save(Curriculum c){
 		curriculumRepository.save(c);
 	}
