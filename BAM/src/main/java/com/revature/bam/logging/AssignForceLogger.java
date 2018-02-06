@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 public class AssignForceLogger {
 
 	/* TODO: Remove Sysouts */
+	private static final Logger logger = LogManager.getLogger(AssignForceLogger.class);
 	
 	/**
 	 * Returns the affected class's name and the date and time the method was invoked. 
@@ -30,24 +33,21 @@ public class AssignForceLogger {
 	 */
 	@Around("execution (* com.revature.bam.controller.AssignForceSyncController.*(..))")
 	public void classNameAndTime(ProceedingJoinPoint pjp) throws Throwable {
-		String sdf = new SimpleDateFormat("MM-dd-yyyy, hh:mm:ss.SSS a ").format(new Date());
-		System.out.print(sdf);
-		System.out.print(" -- AssignForceController -- ");
-		
-		long start = System.currentTimeMillis();
-		pjp.proceed();
-		long end = System.currentTimeMillis();
-		System.out.println("Total time: " + (end-start) + " milliseconds.");
-		
 	}
 	
+	/**
+	 * Sections off part of the log to indicate the start of the method call.
+	 * @param jp
+	 */
 	@Before("execution (* com.revature.bam.controller.AssignForceSyncController.*(..))")
 	public void beforeMethod(JoinPoint jp) {
-		System.out.println("Before " + jp.getSignature().getName() + " method.");
 	}
 	
+	/**
+	 * Sections off part of the log to indicate the end of the method call.
+	 * @param jp
+	 */
 	@After("execution (* com.revature.bam.controller.AssignForceSyncController.*(..))")
 	public void afterMethod(JoinPoint jp) {
-		System.out.println("After " + jp.getSignature().getName() + " method.");
 	}
 }
