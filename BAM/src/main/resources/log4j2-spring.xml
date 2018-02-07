@@ -2,7 +2,7 @@
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">
-            %d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} - [%15.15t] %-40.40c{1.} : %m%n%ex
+            %d{yyyy-MM-dd, hh:mm:ss.SSS a} %5p - [%15.15t] %-40.40c{1.} : %m%n%ex
         </Property>
     </Properties>
      Console output for logging
@@ -21,14 +21,22 @@
 		    </Policies>
 		    <DefaultRolloverStrategy max="20"/>
 		</RollingFile>
+		<Console name="ConsoleAppender" target="SYSTEM_OUT" 
+				 ignoreExceptions="false" follow="true">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+		</Console>
     </Appenders>
      file output for logging
     <Loggers>
         <AsyncLogger name="com.revature.bam" level="debug" additivity="false">
             <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="ConsoleAppender" />
         </AsyncLogger>
         <Root level="info">
             <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="ConsoleAppender" />
         </Root>
     </Loggers>
 
