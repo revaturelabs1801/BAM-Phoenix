@@ -34,8 +34,6 @@ import com.revature.bam.service.BatchService;
 @CrossOrigin
 public class BatchController {
 
-  private static final String EMAIL = "email";
-
   @Autowired
   BatchService batchService;
 
@@ -49,7 +47,6 @@ public class BatchController {
  * @return a list of all batches, Http status 200 otherwise Http status 204
  */
 @GetMapping("all")
-  @ResponseBody 
   public ResponseEntity<List<Batch>> getBatchAll() {
 	  List<Batch> result = batchService.getBatchAll();
 		if(result != null && !result.isEmpty()) {
