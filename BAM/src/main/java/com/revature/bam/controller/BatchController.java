@@ -30,7 +30,7 @@ import com.revature.bam.service.BatchService;
  *
  */
 @RestController
-@RequestMapping(value = "batches/")
+@RequestMapping("batches/")
 @CrossOrigin
 public class BatchController {
 

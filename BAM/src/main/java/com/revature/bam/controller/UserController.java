@@ -22,7 +22,7 @@ import com.revature.bam.service.BatchService;
 import com.revature.bam.service.PasswordGenerator;
 
 @RestController
-@RequestMapping(value = "users/")
+@RequestMapping("users/")
 @CrossOrigin
 public class UserController {
 	

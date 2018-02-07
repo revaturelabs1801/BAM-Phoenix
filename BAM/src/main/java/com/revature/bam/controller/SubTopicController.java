@@ -15,7 +15,7 @@ import com.revature.bam.service.SubtopicService;
 import com.revature.bam.service.TopicService;
 
 @RestController
-@RequestMapping(value = "subtopic/")
+@RequestMapping("subtopic/")
 @CrossOrigin
 public class SubTopicController {
 	@Autowired

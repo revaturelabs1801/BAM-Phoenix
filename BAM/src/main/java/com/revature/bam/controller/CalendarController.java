@@ -25,7 +25,7 @@ import com.revature.bam.service.SubtopicService;
 import com.revature.bam.service.TopicService;
 
 @RestController
-@RequestMapping(value = "calendar/")
+@RequestMapping("calendar/")
 @CrossOrigin
 public class CalendarController {
 

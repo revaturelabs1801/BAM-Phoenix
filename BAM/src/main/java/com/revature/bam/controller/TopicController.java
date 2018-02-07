@@ -12,7 +12,7 @@ import com.revature.bam.bean.TopicName;
 import com.revature.bam.service.TopicService;
 
 @RestController
-@RequestMapping(value = "topic/")
+@RequestMapping("topic/")
 @CrossOrigin
 public class TopicController {
   @Autowired
