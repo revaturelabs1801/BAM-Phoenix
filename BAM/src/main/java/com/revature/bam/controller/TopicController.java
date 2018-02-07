@@ -25,10 +25,10 @@ public class TopicController {
    * 			- status of 201 CREATED if a Topic is created or updated.
    * 			- status of 204 NO_CONTENT is a Topic is not created.
    */
-  @PostMapping("add/{name}")
-  public ResponseEntity<?> addTopicName(@PathVariable String addedTopicName) {
+  @PostMapping("add/{newTopicName}")
+  public ResponseEntity<?> addTopicName(@PathVariable String newTopicName) {
     TopicName topic = new TopicName();
-    topic.setName(addedTopicName);
+    topic.setName(newTopicName);
     TopicName topicUpdate = topicService.addOrUpdateTopicName(topic);
     if(topicUpdate != null) {
     	return new ResponseEntity<>(HttpStatus.CREATED);
