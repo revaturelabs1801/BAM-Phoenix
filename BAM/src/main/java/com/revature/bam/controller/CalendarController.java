@@ -3,7 +3,6 @@ package com.revature.bam.controller;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,16 +25,9 @@ import com.revature.bam.service.SubtopicService;
 import com.revature.bam.service.TopicService;
 
 @RestController
-@RequestMapping(value = "calendar/")
+@RequestMapping("calendar/")
 @CrossOrigin
 public class CalendarController {
-
-	private static final String BATCHID = "batchId";
-	private static final String PAGENUMBER = "pageNumber";
-	private static final String PAGESIZE = "pageSize";
-	private static final String SUBTOPICID = "subtopicId";
-	private static final String DATE = "date";
-	private static final String STATUS = "status";
 
 	@Autowired
 	SubtopicService subtopicService;
@@ -52,33 +45,22 @@ public class CalendarController {
 	 * this method may need to change.
 	 * 
 	 * @param request
-	 *            - Parameters: batchId (int), pageNumber (int), pageSize (int)
+	 *            - Parameters: batchId (int), pageNumber (int), pageSize (int, > 0)
 	 * @return List<Stubtopic> , HttpStatus.OK (200) if successful, BAD REQUEST
 	 *         (400) if missing parameters
 	 * 
-	 *         Authors: Michael Garza Gary LaMountain (batch unknown), Charlie
-	 *         Harris (1712-dec10-java-Steve)
-	 * 
-	 *         note: It will be better to sort by subtopicDate because it will load
-	 *         the most recent subtopics. However, since the subtopics have the
-	 *         sames dates, it's causing duplications on the calendar. return
-	 *         subtopicService.findByBatchId(batchId, new
-	 *         PageRequest(pageNum,pageSiz, Direction.DESC, "subtopicDate"));
+	 * @author: Michael Garza Gary LaMountain (batch unknown), Charlie Harris
+	 *          (1712-dec10-java-Steve)
 	 */
-	@GetMapping("subtopicspagination")
-	public ResponseEntity<List<Subtopic>> getSubtopicsByBatchPagination(HttpServletRequest request) {
-		String batchIdParam = request.getParameter(BATCHID);
-		String pageNumParam = request.getParameter(PAGENUMBER);
-		String pageSizeParam = request.getParameter(PAGESIZE);
-		if (batchIdParam == null || pageNumParam == null || pageSizeParam == null) {
+	@GetMapping("subtopicspagination/{batchId}/{pageNumber}/{pageSize}")
+	public ResponseEntity<List<Subtopic>> getSubtopicsByBatchPagination(@PathVariable Integer batchId,
+			@PathVariable Integer pageNumber, @PathVariable Integer pageSize) {
+		System.out.println(batchId + " " + pageNumber + " " + pageSize);
+		if (batchId == null || pageNumber == null || pageSize == null || pageSize <= 0) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		int batchId = Integer.parseInt(batchIdParam);
-		int pageNum = Integer.parseInt(pageNumParam);
-		int pageSiz = Integer.parseInt(pageSizeParam);
-		
-		List<Subtopic> subtopicLst = subtopicService.findByBatchId(batchId, new PageRequest(pageNum, pageSiz));
+		List<Subtopic> subtopicLst = subtopicService.findByBatchId(batchId, new PageRequest(pageNumber, pageSize));
 		if (subtopicLst.isEmpty()) {
 			return new ResponseEntity<List<Subtopic>>(HttpStatus.NO_CONTENT);
 		}
@@ -94,15 +76,12 @@ public class CalendarController {
 	 *         successful, BAD REQUEST (400) if missing parameters
 	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
-	@GetMapping("subtopics")
-	public ResponseEntity<List<Subtopic>> getSubtopicsByBatch(HttpServletRequest request) {
-		String batchIdParam = request.getParameter(BATCHID);
-		if (batchIdParam == null) {
+	@GetMapping("subtopics/{batchId}")
+	public ResponseEntity<List<Subtopic>> getSubtopicsByBatch(@PathVariable Integer batchId) {
+		if (batchId == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		int batchId = Integer.parseInt(batchIdParam);
-		
 		List<Subtopic> subtopicLst = subtopicService.getSubtopicByBatchId(batchId);
 		if (subtopicLst.isEmpty()) {
 			return new ResponseEntity<List<Subtopic>>(HttpStatus.NO_CONTENT);
@@ -120,14 +99,11 @@ public class CalendarController {
 	 * @author Michael Garza (batch unknown), Gary LaMountain (batch unknown),
 	 *         Charlie Harris (1712-dec10-java-Steve)
 	 */
-	@GetMapping("getnumberofsubtopics")
-	public ResponseEntity<Long> getNumberOfSubTopicsByBatch(HttpServletRequest request) {
-		String batchIdParam = request.getParameter(BATCHID);
-		if (batchIdParam == null) {
+	@GetMapping("getnumberofsubtopics/{batchId}")
+	public ResponseEntity<Long> getNumberOfSubTopicsByBatch(@PathVariable Integer batchId) {
+		if (batchId == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-
-		int batchId = Integer.parseInt(batchIdParam);
 
 		return new ResponseEntity<Long>(subtopicService.getNumberOfSubtopics(batchId), HttpStatus.OK);
 	}
@@ -141,15 +117,12 @@ public class CalendarController {
 	 *         if successful, BAD REQUEST (400) if missing parameters
 	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
-	@GetMapping("topics")
-	public ResponseEntity<List<TopicWeek>> getTopicsByBatchPag(HttpServletRequest request) {
-		String batchIdParam = request.getParameter(BATCHID);
-		if (batchIdParam == null) {
+	@GetMapping("topics/{batchId}")
+	public ResponseEntity<List<TopicWeek>> getTopicsByBatchPag(@PathVariable Integer batchId) {
+		if (batchId == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		int batchId = Integer.parseInt(batchIdParam);
-		
 		List<TopicWeek> topicLst = topicService.getTopicByBatchId(batchId);
 		if (topicLst.isEmpty()) {
 			return new ResponseEntity<List<TopicWeek>>(HttpStatus.NO_CONTENT);
@@ -165,32 +138,24 @@ public class CalendarController {
 	 * @return OK (200) if update occurs, NO CONTENT (204) if requested
 	 *         batch/subtopic does not exist, BAD REQUEST (400) if missing
 	 *         parameters
-	 * @author (1712-dec10-java-Steve) Charlie Harris, Jordan DeLong 
+	 * @author (1712-dec10-java-Steve) Charlie Harris, Jordan DeLong
 	 */
-	@PostMapping("dateupdate")
-	public ResponseEntity<?> changeTopicDate(HttpServletRequest request) {
-		String subtopicIdParam = request.getParameter(SUBTOPICID);
-		String batchIdParam = request.getParameter(BATCHID);
-		String newDateParam = request.getParameter(DATE);
-		if (subtopicIdParam == null || batchIdParam == null || newDateParam == null) {
+	@PostMapping("dateupdate/{subtopicId}/{batchId}/{date}")
+	public ResponseEntity<?> changeTopicDate(@PathVariable Integer subtopicId, @PathVariable Integer batchId, @PathVariable Long date) {
+		if (subtopicId == null || batchId == null || date == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-
-		int subtopicId = Integer.parseInt(request.getParameter("subtopicId"));
-		int batchId = Integer.parseInt(request.getParameter(BATCHID));
-		long newDate = Long.valueOf(newDateParam);
 
 		List<Subtopic> topics = subtopicService.getSubtopicByBatchId(batchId);
 		for (Subtopic sub : topics) {
 			if (sub.getSubtopicId() == subtopicId) {
-				sub.setSubtopicDate(new Timestamp(newDate));
+				sub.setSubtopicDate(new Timestamp(date));
 				subtopicService.updateSubtopic(sub);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
 
 	/**
 	 * Updates the status of the given subtopic in the given batch
@@ -202,23 +167,17 @@ public class CalendarController {
 	 *         parameters
 	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
-	@GetMapping("statusupdate")
-	public ResponseEntity<?> updateTopicStatus(HttpServletRequest request) {
-		String subtopicIdParam = request.getParameter(SUBTOPICID);
-		String batchIdParam = request.getParameter(BATCHID);
-		String statusParam = request.getParameter(STATUS);
-		if (subtopicIdParam == null || batchIdParam == null || statusParam == null) {
+	@GetMapping("statusupdate/{subtopicId}/{batchId}/{status}")
+	public ResponseEntity<?> updateTopicStatus(@PathVariable Integer subtopicId, @PathVariable Integer batchId, @PathVariable String status) {
+		if (subtopicId == null || batchId == null || status == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		int subtopicId = Integer.parseInt(subtopicIdParam);
-		int batchId = Integer.parseInt(batchIdParam);
-		SubtopicStatus status = subtopicService.getStatus(statusParam);
-
+		SubtopicStatus subtopicStatus = subtopicService.getStatus(status);
 		List<Subtopic> topics = subtopicService.getSubtopicByBatchId(batchId);
 		for (Subtopic sub : topics) {
 			if (sub.getSubtopicId() == subtopicId) {
-				sub.setStatus(status);
+				sub.setStatus(subtopicStatus);
 				subtopicService.updateSubtopic(sub);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}

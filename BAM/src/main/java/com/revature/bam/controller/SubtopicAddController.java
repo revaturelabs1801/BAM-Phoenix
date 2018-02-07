@@ -14,7 +14,7 @@ import com.revature.bam.exception.CustomException;
 import com.revature.bam.service.SubtopicService;
 
 @RestController
-@RequestMapping(value = "/subtopic")
+@RequestMapping("/subtopic")
 @CrossOrigin
 public class SubtopicAddController {
 
