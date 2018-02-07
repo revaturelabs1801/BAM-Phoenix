@@ -1,28 +1,21 @@
 package com.revature.bam.controller;
 
-/**
- * 
- */
-
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.bam.bean.Subtopic;
 import com.revature.bam.exception.CustomException;
 import com.revature.bam.service.SubtopicService;
 
 @RestController
 @RequestMapping(value = "/subtopic")
+@CrossOrigin
 public class SubtopicAddController {
 
   @Autowired
@@ -38,17 +31,9 @@ public class SubtopicAddController {
    */
 
   @PostMapping("addsubtopic")
-  public ResponseEntity<?> addSubtopic(@RequestBody Subtopic st) /*throws CustomException */{
-
-//   st = null;
-//    try {
-//      st = new ObjectMapper().readValue(st, Subtopic.class);
-//    } catch (IOException e) {
-//      throw new CustomException(e);
-//    }
-
-    subserv.updateSubtopic(st);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+  public ResponseEntity<Subtopic> addSubtopic(@RequestBody Subtopic st) {
+    st = subserv.updateSubtopic(st);
+    return new ResponseEntity<Subtopic>(st, HttpStatus.CREATED);
   }
 
 }
