@@ -54,12 +54,12 @@ public class Curriculum {
 		//Empty Because No Args
 	}
 
-	public Integer getCurriculumId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setCurriculumId(Integer curriculumId) {
-		this.id = curriculumId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getCurriculumName() {
