@@ -70,7 +70,6 @@ public class CurriculumController {
 	 *         if list is empty
 	 */
 	@GetMapping(value = "all")
-	@ResponseBody
 	public ResponseEntity<List<Curriculum>> getAllCurriculum() {
 		List<Curriculum> result = curriculumService.getAllCurriculum();
 		if (result != null && !result.isEmpty()) {
@@ -86,7 +85,6 @@ public class CurriculumController {
 	 *         doesn't match, HttpStatus.BAD_REQUEST if missing parameters
 	 */
 	@GetMapping(value = "getcurriculum/{cId}")
-	@ResponseBody
 	public ResponseEntity<Curriculum> getCurriculumById(@PathVariable int cId) {
 
 		Curriculum result = new Curriculum();
@@ -114,7 +112,6 @@ public class CurriculumController {
 	 *         missing parameters
 	 */
 	@GetMapping(value = "schedule/{cId}")
-	@ResponseBody
 	public ResponseEntity<List<CurriculumSubtopic>> getAllCurriculumSchedules(@PathVariable int cId) {
 
 		Curriculum c = new Curriculum();
@@ -125,7 +122,7 @@ public class CurriculumController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		c.setCurriculumId(cId);
+		c.setId(cId);
 
 		List<CurriculumSubtopic> result = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
 		if (result != null && !result.isEmpty()) {
@@ -141,7 +138,6 @@ public class CurriculumController {
 	 *         HttpStatus.NO_CONTENT if list is empty
 	 */
 	@GetMapping(value = "topicpool")
-	@ResponseBody
 	public ResponseEntity<List<SubtopicName>> getTopicPool() {
 		List<SubtopicName> result = subtopicService.getAllSubtopics();
 		if (result != null && !result.isEmpty()) {
@@ -158,7 +154,6 @@ public class CurriculumController {
 	 *         list is empty
 	 */
 	@GetMapping(value = "subtopicpool")
-	@ResponseBody
 	public ResponseEntity<List<Subtopic>> getSubtopicPool() {
 		List<Subtopic> result = subtopicService.getSubtopics();
 		if (result != null && !result.isEmpty()) {

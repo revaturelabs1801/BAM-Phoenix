@@ -66,7 +66,6 @@ public class BatchController {
  */
 @GetMapping("past/{email}")
   public ResponseEntity<List<Batch>> getPastBatches(@PathVariable String email) {
-	System.out.println(email);
     List<Batch> batches = batchService.getBatchByTrainer(bamUserService.findUserByEmail(email));
 
     List<Batch> pastBatches = new ArrayList<>();
