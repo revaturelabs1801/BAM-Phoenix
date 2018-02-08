@@ -202,7 +202,7 @@ public class CalendarController {
 	 *         parameters
 	 * @author Charlie Harris (1712-dec10-java-Steve)
 	 */
-	@GetMapping("statusupdate")
+	@PostMapping("statusupdate")
 	public ResponseEntity<?> updateTopicStatus(HttpServletRequest request) {
 		String subtopicIdParam = request.getParameter(SUBTOPICID);
 		String batchIdParam = request.getParameter(BATCHID);
