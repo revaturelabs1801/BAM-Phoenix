@@ -8,7 +8,11 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 
@@ -95,4 +99,30 @@ public class ServiceAndControllerLogger {
 		logger.debug("Total time: " + (end-start) + " milliseconds.");
 		return object;
 	}
+
+	/**
+	 * Indicates a GET mapped method has fired.  
+	 * @param classRequestMapping
+	 * @param getMapping
+	 */
+	@Pointcut("@target(classRequestMapping) && @annotation(getMapping) && execution(* com.revature.bam.controller.*.*(..))")
+	public void controller(RequestMapping classRequestMapping, GetMapping getMapping) {}
+	@Before("controller(classRequestMapping, getMapping)")
+	public void advice(JoinPoint jp, RequestMapping classRequestMapping, GetMapping getMapping) {
+		logger.info("GET" + " -- " + jp.getSignature().getDeclaringTypeName());
+	}
+	
+	/**
+	 * This is SUPPOSED to indicate a POST mapped method has fired.
+	 * See Issue on GitHub.
+	 * @param classRequestMapping
+	 * @param postMapping
+	 */
+	/*
+	@Pointcut("@target(classRequestMapping) && @annotation(postMapping) && execution(* com.revature.bam.controller.*.*(..))")
+	public void postController(RequestMapping classRequestMapping, PostMapping postMapping) {}
+	@Before("controller(classRequestMapping, postMapping)")
+	public void postAdvice(JoinPoint jp, RequestMapping classRequestMapping, PostMapping postMapping) {
+		logger.info("POST" + " -- " + jp.getSignature().getDeclaringTypeName());
+	}*/
 }
