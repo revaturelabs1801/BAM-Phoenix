@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 
- * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
+ * @author Allan Poindexter, David Graves / Batch 1712_dec11th_Java_Steve
  * 
  * Generic Logger to indicate the start and end of Controllers and Methods.
  */
@@ -169,7 +169,9 @@ public class ServiceAndControllerLogger {
 	}
 
 	/**
-	 * Indicates a GET mapped method has fired.  
+	 * Indicates a GET mapped method has fired. POST equivalent does not exist. See Issue on GitHub.
+	 * 
+	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve  
 	 * @param classRequestMapping
 	 * @param getMapping
 	 */
