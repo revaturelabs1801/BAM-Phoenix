@@ -5,10 +5,13 @@ import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,6 +55,71 @@ public class ServiceAndControllerLogger {
 		logger.debug("\r\n\n\n");
 	}
 	
+	/**
+	 * Writes the exception thrown by a Controller method.
+	 * 
+	 * @author David Graves / Batch 1712_dec11th_Java_Steve
+	 * @param jp
+	 * 		-The Controller Method
+	 * @param ex
+	 * 		-The Exception Thrown
+	 */
+	@AfterThrowing(pointcut = "execution (* com.revature.bam.controller.*.*(..))", throwing = "ex")
+	public void afterControllerThrows(JoinPoint jp, Exception ex) throws Exception {
+		logger.info("EXCEPTION THROWN IN CONTROLLER " + jp.getSignature().getName() + "(). " + 
+				ex.getCause().getMessage());
+	}
+	
+	/**
+	 * Writes the status code of Controller methods.
+	 * 
+	 * @author David Graves / Batch 1712_dec11th_Java_Steve
+	 * @param jp
+	 * 		-The Controller Method
+	 * @param retVal
+	 * 		-The ResponseEntity returned
+	 */
+	@AfterReturning(pointcut = "execution (* com.revature.bam.controller.*.*(..))", 
+			returning = "retVal")
+	public void afterControllerReturns(JoinPoint jp, ResponseEntity<?> retVal) {
+		logger.info("CONTROLLER " + jp.getSignature().getName() + "()" +
+				" RETURNED WITH STATUS " + retVal.getStatusCodeValue());
+		if(retVal.hasBody()) {
+			logger.info("CONTROLLER " + jp.getSignature().getName() + "()" +
+					" RETURNED VALUE " + retVal.getBody());
+		}	
+	}
+	
+	/**
+	 * Writes the exception thrown by a Controller method.
+	 * 
+	 * @author David Graves / Batch 1712_dec11th_Java_Steve
+	 * @param jp
+	 * 		-The Service Method
+	 * @param ex
+	 * 		-The Exception Thrown
+	 */
+	@AfterThrowing(pointcut = "execution (* com.revature.bam.service.*.*(..))", throwing = "ex")
+	public void afterServiceThrows(JoinPoint jp, Exception ex) throws Exception {
+		logger.info("EXCEPTION THROWN IN SERVICE " + jp.getSignature().getName() + "(). " + 
+				ex.getCause().getMessage());
+	}
+	
+	/**
+	 * Writes the status code of Controller methods.
+	 * 
+	 * @author David Graves / Batch 1712_dec11th_Java_Steve
+	 * @param jp
+	 * 		-The Service Method
+	 * @param retVal
+	 * 		-The value returned
+	 */
+	@AfterReturning(pointcut = "execution (* com.revature.bam.service.*.*(..))", 
+			returning = "retVal")
+	public void afterServiceReturns(JoinPoint jp, Object retVal) {
+		logger.info("SERVICE " + jp.getSignature().getName() + "() " +
+				"RETURNED VALUE " + retVal);
+	}
 	
 	/**
 	 * Writes the start of a Service method call.
