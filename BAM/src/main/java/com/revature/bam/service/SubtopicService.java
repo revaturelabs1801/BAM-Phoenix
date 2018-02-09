@@ -86,11 +86,13 @@ public class SubtopicService {
    * 
    * @author Samuel Louis-Pierre, Avant Mathur, (1712-dec10-java-Steve) Jordan DeLong 
    */
-  public void updateSubtopic(Subtopic subtopic) {
+	
+  public Subtopic updateSubtopic(Subtopic subtopic) {
     Long newDate = subtopic.getSubtopicDate().getTime();
     subtopic.setSubtopicDate(new Timestamp(newDate));
 
     subtopicRepository.save(subtopic);
+    return subtopic;
   }
 
 	public SubtopicStatus getStatus(String name) {
