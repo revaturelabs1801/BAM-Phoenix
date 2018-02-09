@@ -31,7 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthenticationFailureHandler restAuthenticationFailureHandler;
 	
-	
+	/**
+	 * @author David Graves 
+	 * 			- Batch 1712
+	 * Boolean value to configure security for testing or production
+	 */
+	private final boolean testing = true;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -59,10 +64,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return authProvider;
 	}
 	
+	/**
+	 * @author David Graves 
+	 * 			- Batch 1712
+	 * WebSecurity configuration based on testing boolean
+	 */
 	 @Override
 	 public void configure(WebSecurity web) throws Exception {
-		// Ignore certain URLs.
-		web.ignoring().antMatchers("/index.html", "/static/**", "/" , "/**");
+		 // Ignore certain URLs.
+		 if(this.testing) {
+			 web.ignoring().antMatchers("/index.html", "/static/**", "/" , "/**");
+		 } else {
+			 web.ignoring().antMatchers("/index.html", "/static/**", "/");
+		 }
 	 }
 
 	 
@@ -80,36 +94,65 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 * uncomment to protect rest endpoints, need to fix the roles first 
 	 * logout isn't getting deleting of JSESSIONID
 	 * Don't disable csrf in production
+	 * 
+	 * @author David Graves 
+	 * 			Batch 1712
+	 * updated to automatically configure based on testing boolean
+	 * will protect endpoints and enable csrf protection if testing is set to false
 	 */
 	@Override
-	 protected void configure(HttpSecurity http) throws Exception {
-	  http
-	   .headers().disable()
-	   .csrf().disable()
-//	   .exceptionHandling()
-//	   .authenticationEntryPoint(authenticationEntryPoint)
-//	   .and()
-	   .authorizeRequests()
-	    .antMatchers("/rest/api/v1/Users/Register").permitAll()
-//	    .antMatchers("**rest*/**").authenticated()
-//	    .antMatchers("*rest*/**").authenticated()
-//	    .antMatchers("**/*rest*/**").authenticated()
-//	    .antMatchers("**rest*/**").authenticated()
-	    .anyRequest().authenticated()
-//	    .antMatchers("/rest/api/v1/Curriculum/**").hasAuthority("Trainer")
-	    .and()
-	    .formLogin()
-	   	.loginPage("/")
-	    .loginProcessingUrl("/authenticate")
-	    .successHandler(restAuthenticationSuccessHandler)
-	    .failureHandler(restAuthenticationFailureHandler)
-	    .usernameParameter("username")
-	    .passwordParameter("password")
-	    .permitAll()
-	    .and()
-	    .logout()
-	    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	    .logoutSuccessUrl("/logout").deleteCookies("JSESSIONID")
-	    .invalidateHttpSession(true);		
-	 }
+	protected void configure(HttpSecurity http) throws Exception {
+		
+		if(this.testing) {
+			http
+			.headers().disable()
+			.csrf().disable()
+			.authorizeRequests()
+				.antMatchers("/**/Users/Register").permitAll() //Update this line when the register page is implemented
+			    .anyRequest().authenticated()
+			    .and()
+			.formLogin()
+			   	.loginPage("/")
+			    .loginProcessingUrl("/authenticate")
+			    .successHandler(restAuthenticationSuccessHandler)
+			    .failureHandler(restAuthenticationFailureHandler)
+			    .usernameParameter("username")
+			    .passwordParameter("password")
+			    .permitAll()
+			    .and()
+			.logout()
+			    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+			    .logoutSuccessUrl("/logout").deleteCookies("JSESSIONID")
+			    .invalidateHttpSession(true);		
+		} else {
+			http
+			   .exceptionHandling()
+			   .and()
+			.authorizeRequests()
+				.antMatchers("/**/Users/Register").permitAll() //Update this line when the register page is implemented
+				.antMatchers("/**/refreshbatches**").authenticated()
+				.antMatchers("/**/batches/**").authenticated()
+			    .antMatchers("/**/calendar/**").authenticated()
+			    .antMatchers("/**/curriculum/**").authenticated()
+			    .antMatchers("/**/subtopic/**").authenticated()
+			    .antMatchers("/**/topic/**").authenticated()
+			    .antMatchers("/**/users/**").authenticated()
+			    .anyRequest().authenticated()
+			    .antMatchers("/**/curriculum/**").hasAuthority("Trainer")
+			    .and()
+			.formLogin()
+			   	.loginPage("/")
+			    .loginProcessingUrl("/authenticate")
+			    .successHandler(restAuthenticationSuccessHandler)
+			    .failureHandler(restAuthenticationFailureHandler)
+			    .usernameParameter("username")
+			    .passwordParameter("password")
+			    .permitAll()
+			    .and()
+			.logout()
+			    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+			    .logoutSuccessUrl("/logout").deleteCookies("JSESSIONID")
+			    .invalidateHttpSession(true);
+		}
+	}
 }
