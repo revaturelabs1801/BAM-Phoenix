@@ -192,5 +192,4 @@ public class BatchController {
 	  }
 	  return  new ResponseEntity<List<BatchType>>(HttpStatus.NO_CONTENT);
   }
-
 }

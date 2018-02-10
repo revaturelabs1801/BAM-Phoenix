@@ -45,4 +45,22 @@ public class SubTopicController {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 	}
+	
+	/**
+	 * @author Sean Sung / Batch 1712-dec10-java-steve
+	 * 
+	 * @param post
+	 * 			- accepts subtopicid parameter
+	 * @return HttpStatus
+	 * 			- status of 204 if a subtopic was removed.
+	 * 			- status of 500 if exception.
+	 */
+	@PostMapping("remove/{subtopicId}")
+	public ResponseEntity<?> removeSubtopic(@PathVariable int subtopicId) {
+		if(subTopicService.removeSubtopicFromBatch(subtopicId)) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

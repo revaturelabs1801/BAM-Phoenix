@@ -167,4 +167,13 @@ public class SubtopicService {
   public SubtopicName addOrUpdateSubtopicName(SubtopicName subtopicName) {
     return subtopicNameRepository.save(subtopicName);
   }
+  
+  public boolean removeSubtopicFromBatch(int subtopicId) {
+	  try {
+		  subtopicRepository.delete(subtopicId);
+		  return true;
+	  } catch(IllegalArgumentException e) {
+		  return false;
+	  } 
+  }
 }
