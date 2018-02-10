@@ -28,6 +28,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ServiceAndControllerLogger {
 
 	private static final Logger logger = LogManager.getLogger(ServiceAndControllerLogger.class);
+	
+	private final String START_EVENT = "startEvent=";
+	private final String END_EVENT = "endEvent=";
+	private final String RUN_TIME = "totalRuntime=";
+	private final String EXCEPTION = "exceptionThrown:";
+	private final String CTRL_STATUS = "returnedControllerStatus=";
+	private final String CTRL_VALUE = "returnedControllerValue=";
+	private final String SRVC_STATUS = "returnedServiceStatus=";
+	private final String SRVC_VALUE = "returnedServiceValue=";
+	private final String REQ_METHOD = "requestMethod=";
 
 	/**
 	 * Writes the start of a Controller method call.
@@ -38,8 +48,7 @@ public class ServiceAndControllerLogger {
 	 */
 	@Before("execution (* com.revature.bam.controller.*.*(..))")
 	public void beforeControllerMethod(JoinPoint jp) {
-		logger.debug("\r\n\n\n");
-		logger.debug("START CONTROLLER - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
+		logger.debug(START_EVENT + "CONTROLLER - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
 	}
 	
 	/**
@@ -51,8 +60,7 @@ public class ServiceAndControllerLogger {
 	 */
 	@After("execution (* com.revature.bam.controller.*.*(..))")
 	public void afterControllerMethod(JoinPoint jp) {
-		logger.debug("END CONTROLLER - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
-		logger.debug("\r\n\n\n");
+		logger.debug(END_EVENT + "CONTROLLER - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
 	}
 	
 	/**
@@ -66,7 +74,7 @@ public class ServiceAndControllerLogger {
 	 */
 	@AfterThrowing(pointcut = "execution (* com.revature.bam.controller.*.*(..))", throwing = "ex")
 	public void afterControllerThrows(JoinPoint jp, Exception ex) throws Exception {
-		logger.info("EXCEPTION THROWN IN CONTROLLER " + jp.getSignature().getName() + "(). " + 
+		logger.info(EXCEPTION + "CONTROLLER " + jp.getSignature().getName() + "(). " + 
 				ex.getCause().getMessage());
 	}
 	
@@ -82,16 +90,16 @@ public class ServiceAndControllerLogger {
 	@AfterReturning(pointcut = "execution (* com.revature.bam.controller.*.*(..))", 
 			returning = "retVal")
 	public void afterControllerReturns(JoinPoint jp, ResponseEntity<?> retVal) {
-		logger.info("CONTROLLER " + jp.getSignature().getName() + "()" +
-				" RETURNED WITH STATUS " + retVal.getStatusCodeValue());
+		logger.info("CONTROLLER " + jp.getSignature().getName() + "() " +
+				 CTRL_STATUS + retVal.getStatusCodeValue());
 		if(retVal.hasBody()) {
-			logger.info("CONTROLLER " + jp.getSignature().getName() + "()" +
-					" RETURNED VALUE " + retVal.getBody());
+			logger.info("CONTROLLER " + jp.getSignature().getName() + "() " +
+					CTRL_VALUE + retVal.getBody());
 		}	
 	}
 	
 	/**
-	 * Writes the exception thrown by a Controller method.
+	 * Writes the exception thrown by a Service method.
 	 * 
 	 * @author David Graves / Batch 1712_dec11th_Java_Steve
 	 * @param jp
@@ -101,12 +109,12 @@ public class ServiceAndControllerLogger {
 	 */
 	@AfterThrowing(pointcut = "execution (* com.revature.bam.service.*.*(..))", throwing = "ex")
 	public void afterServiceThrows(JoinPoint jp, Exception ex) throws Exception {
-		logger.info("EXCEPTION THROWN IN SERVICE " + jp.getSignature().getName() + "(). " + 
+		logger.info(EXCEPTION + "SERVICE" + jp.getSignature().getName() + "(). " + 
 				ex.getCause().getMessage());
 	}
 	
 	/**
-	 * Writes the status code of Controller methods.
+	 * Writes the returned value of Service methods.
 	 * 
 	 * @author David Graves / Batch 1712_dec11th_Java_Steve
 	 * @param jp
@@ -118,7 +126,7 @@ public class ServiceAndControllerLogger {
 			returning = "retVal")
 	public void afterServiceReturns(JoinPoint jp, Object retVal) {
 		logger.info("SERVICE " + jp.getSignature().getName() + "() " +
-				"RETURNED VALUE " + retVal);
+				SRVC_VALUE + retVal);
 	}
 	
 	/**
@@ -130,7 +138,7 @@ public class ServiceAndControllerLogger {
 	 */
 	@Before("execution (* com.revature.bam.service.*.*(..))")
 	public void beforeServiceMethod(JoinPoint jp) {
-		logger.debug("START SERVICE - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
+		logger.debug(START_EVENT + "SERVICE - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
 	}
 	
 	/**
@@ -142,7 +150,7 @@ public class ServiceAndControllerLogger {
 	 */
 	@After("execution (* com.revature.bam.service.*.*(..))")
 	public void afterServiceMethod(JoinPoint jp) {
-		logger.debug("END SERVICE - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
+		logger.debug(END_EVENT + "SERVICE - " + jp.getSignature().getDeclaringTypeName() + "."  + jp.getSignature().getName() + "()");
 	}
 	
 	/**
@@ -164,7 +172,7 @@ public class ServiceAndControllerLogger {
 		long start = System.currentTimeMillis();
 		Object object = pjp.proceed();
 		long end = System.currentTimeMillis();
-		logger.debug("Total time: " + (end-start) + " milliseconds.");
+		logger.debug(RUN_TIME + (end-start) + " milliseconds.");
 		return object;
 	}
 
@@ -176,10 +184,10 @@ public class ServiceAndControllerLogger {
 	 * @param getMapping
 	 */
 	@Pointcut("@target(classRequestMapping) && @annotation(getMapping) && execution(* com.revature.bam.controller.*.*(..))")
-	public void controller(RequestMapping classRequestMapping, GetMapping getMapping) {}
+	public void	controller(RequestMapping classRequestMapping, GetMapping getMapping) {}
 	@Before("controller(classRequestMapping, getMapping)")
 	public void advice(JoinPoint jp, RequestMapping classRequestMapping, GetMapping getMapping) {
-		logger.info("GET" + " -- " + jp.getSignature().getDeclaringTypeName());
+		logger.info(REQ_METHOD + "GET -- " + jp.getSignature().getDeclaringTypeName());
 	}
 	
 }
