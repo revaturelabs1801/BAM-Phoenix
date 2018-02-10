@@ -5,11 +5,12 @@
             %d{yyyy-MM-dd, hh:mm:ss.SSS a} %5p - [%15.15t] %-40.40c{1.} : %m%n%ex
         </Property>
         <Property name="baseDir">logs</Property>
+        <Property name="rollName">log4j2-BAM</Property>
     </Properties>
     <Appenders>
 		Rolling File Appender
 		<RollingFile name="FileAppender" fileName="${baseDir}/BAMLogs.log" 
-		             filePattern="logs/log4j2-BAM-%d{yyyy-MM-dd}-%i.log">
+		             filePattern="${baseDir}/${rollName}-%d{yyyy-MM-dd}-%i.log">
 		    <PatternLayout>
 		        <Pattern>${LOG_PATTERN}</Pattern>
 		    </PatternLayout>
@@ -24,7 +25,7 @@
 		    	Delete from the base 'logs' folder when the folder exceeds 2GB in size.
 		    	Also delete files older than 60 days.
 		    	<Delete basePath="${baseDir}" maxDepth="1">
-		    		<IfFileName glob="log4j2-BAM-*.log">
+		    		<IfFileName glob="${rollName}-*.log">
 			    		<IfAny>
 			    			<IfAccumulatedFileSize exceeds="2GB"/>
 			    			<IfLastModified age="60d"/>
