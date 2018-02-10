@@ -167,15 +167,15 @@ public class BatchController {
  * A method to update batch using BatchService.
  * 
  * @param batch to be update.
- * @return Http status 201 otherwise Http status 400
+ * @return batch and Http status 202 otherwise Http status 400
  */
 @PostMapping("updatebatch")
-  public ResponseEntity<?> updateBatch(@RequestBody Batch batch) {
+  public ResponseEntity<Batch> updateBatch(@RequestBody Batch batch) {
     Batch result = batchService.addOrUpdateBatch(batch);
-    if ( result != null) {
-		  return new ResponseEntity<>(HttpStatus.ACCEPTED); 
+    if ( result != null ) {
+		  return new ResponseEntity<Batch>(result, HttpStatus.ACCEPTED); 
 	  }
-	  return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	  return  new ResponseEntity<Batch>(HttpStatus.BAD_REQUEST);
     
   }
 
