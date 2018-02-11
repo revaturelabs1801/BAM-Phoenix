@@ -14,7 +14,7 @@ import com.revature.bam.exception.CustomException;
 import com.revature.bam.service.SubtopicService;
 
 @RestController
-@RequestMapping(value = "/subtopic")
+@RequestMapping("/subtopic")
 @CrossOrigin
 public class SubtopicAddController {
 
@@ -24,24 +24,17 @@ public class SubtopicAddController {
   /**
    * 
    * @param jsonObj
-   * @author Samuel Louis-Pierre, Avant Mathur, Tyler Dresselhouse, Daniel Robinson
+   * @author Samuel Louis-Pierre, Avant Mathur
+   * @author Tyler Dresselhouse, Daniel Robinson (1712-Steve)
    * 
    *         REST controller to add existing subtopic to specified batch
    * @throws CustomException
    */
 
   @PostMapping("addsubtopic")
-  public ResponseEntity<?> addSubtopic(@RequestBody Subtopic st) /*throws CustomException */{
-
-//   st = null;
-//    try {
-//      st = new ObjectMapper().readValue(st, Subtopic.class);
-//    } catch (IOException e) {
-//      throw new CustomException(e);
-//    }
-
-    subserv.updateSubtopic(st);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+  public ResponseEntity<Subtopic> addSubtopic(@RequestBody Subtopic st) {
+    st = subserv.updateSubtopic(st);
+    return new ResponseEntity<Subtopic>(st, HttpStatus.CREATED);
   }
 
 }

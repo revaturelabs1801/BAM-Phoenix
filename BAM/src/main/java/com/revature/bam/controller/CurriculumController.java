@@ -32,7 +32,7 @@ import com.revature.bam.service.CurriculumSubtopicService;
 import com.revature.bam.service.SubtopicService;
 
 @RestController
-@RequestMapping(value = "curriculum/")
+@RequestMapping("curriculum/")
 @CrossOrigin
 public class CurriculumController {
 
@@ -69,8 +69,7 @@ public class CurriculumController {
 	 * @return List<Curriculum>, HttpStatus.OK if successful, HttpStatus.NO_CONTENT
 	 *         if list is empty
 	 */
-	@GetMapping(value = "all")
-	@ResponseBody
+	@GetMapping("all")
 	public ResponseEntity<List<Curriculum>> getAllCurriculum() {
 		List<Curriculum> result = curriculumService.getAllCurriculum();
 		if (result != null && !result.isEmpty()) {
@@ -85,8 +84,7 @@ public class CurriculumController {
 	 * @return Curriculum, HttpStatus.OK if successful HttpStatus.NO_CONTENT if id
 	 *         doesn't match, HttpStatus.BAD_REQUEST if missing parameters
 	 */
-	@GetMapping(value = "getcurriculum/{cId}")
-	@ResponseBody
+	@GetMapping("getcurriculum/{cId}")
 	public ResponseEntity<Curriculum> getCurriculumById(@PathVariable int cId) {
 
 		Curriculum result = new Curriculum();
@@ -113,8 +111,7 @@ public class CurriculumController {
 	 *         HttpStatus.NO_CONTENT if id doesn't match, HttpStatus.BAD_REQUEST if
 	 *         missing parameters
 	 */
-	@GetMapping(value = "schedule/{cId}")
-	@ResponseBody
+	@GetMapping("schedule/{cId}")
 	public ResponseEntity<List<CurriculumSubtopic>> getAllCurriculumSchedules(@PathVariable int cId) {
 
 		Curriculum c = new Curriculum();
@@ -125,7 +122,7 @@ public class CurriculumController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		c.setCurriculumId(cId);
+		c.setId(cId);
 
 		List<CurriculumSubtopic> result = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
 		if (result != null && !result.isEmpty()) {
@@ -140,8 +137,7 @@ public class CurriculumController {
 	 * @return List<SubtopicName>, HttpStatus.OK if successful,
 	 *         HttpStatus.NO_CONTENT if list is empty
 	 */
-	@GetMapping(value = "topicpool")
-	@ResponseBody
+	@GetMapping("topicpool")
 	public ResponseEntity<List<SubtopicName>> getTopicPool() {
 		List<SubtopicName> result = subtopicService.getAllSubtopics();
 		if (result != null && !result.isEmpty()) {
@@ -157,8 +153,7 @@ public class CurriculumController {
 	 * @return List<Subtopic>, HttpStatus.OK if successful, HttpStatus.NO_CONTENT if
 	 *         list is empty
 	 */
-	@GetMapping(value = "subtopicpool")
-	@ResponseBody
+	@GetMapping("subtopicpool")
 	public ResponseEntity<List<Subtopic>> getSubtopicPool() {
 		List<Subtopic> result = subtopicService.getSubtopics();
 		if (result != null && !result.isEmpty()) {
@@ -176,7 +171,7 @@ public class CurriculumController {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	@PostMapping(value = "addcurriculum")
+	@PostMapping("addcurriculum")
 	public ResponseEntity<?> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumSubtopicDTO c = mapper.readValue(json, CurriculumSubtopicDTO.class);
@@ -221,7 +216,7 @@ public class CurriculumController {
 	 * @return HttpStatus.BAD_REQUEST if missing parameter, HttpStatus.ACCEPTED if
 	 *         successful
 	 */
-	@GetMapping(value = "makemaster/{cId}")
+	@GetMapping("makemaster/{cId}")
 	public ResponseEntity<?> markCurriculumAsMaster(@PathVariable int cId) {
 
 		Curriculum c = new Curriculum();
@@ -269,7 +264,7 @@ public class CurriculumController {
 	 *         already synced
 	 * @throws CustomException
 	 */
-	@GetMapping(value = "syncbatch/{id}")
+	@GetMapping("syncbatch/{id}")
 	public ResponseEntity<?> syncBatch(@PathVariable int id) throws CustomException {
 		Batch currBatch = batchService.getBatchById(id);
 		String batchType = currBatch.getType().getName();
