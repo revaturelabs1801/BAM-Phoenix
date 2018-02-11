@@ -32,7 +32,7 @@ public class ServiceAndControllerLogger {
 	private final String START_EVENT = "startEvent=";
 	private final String END_EVENT = "endEvent=";
 	private final String RUN_TIME = "totalRuntime=";
-	private final String EXCEPTION = "exceptionThrown:";
+	private final String EXCEPTION = "exceptionThrown=";
 	private final String CTRL_STATUS = "returnedControllerStatus=";
 	private final String CTRL_VALUE = "returnedControllerValue=";
 	private final String SRVC_STATUS = "returnedServiceStatus=";
