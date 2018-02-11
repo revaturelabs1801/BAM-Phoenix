@@ -18,20 +18,20 @@ public class TopicController {
   @Autowired
   TopicService topicService;
   /**
-   * @author Cristian Hermida / Batch 1712-dec10-java-steve
+   * @author Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
    * @param request
    * 			- I request must have to have the name of the topic.
-   * @return HttpStatus
+   * @return The added topic (if any) as a TopicName and HttpStatus
    * 			- status of 201 CREATED if a Topic is created or updated.
    * 			- status of 204 NO_CONTENT is a Topic is not created.
    */
   @PostMapping("add/{newTopicName}")
-  public ResponseEntity<?> addTopicName(@PathVariable String newTopicName) {
+  public ResponseEntity<TopicName> addTopicName(@PathVariable String newTopicName) {
     TopicName topic = new TopicName();
     topic.setName(newTopicName);
     TopicName topicUpdate = topicService.addOrUpdateTopicName(topic);
     if(topicUpdate != null) {
-    	return new ResponseEntity<>(HttpStatus.CREATED);
+    	return new ResponseEntity<TopicName>(topicUpdate, HttpStatus.CREATED);
     }
     else {
     	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
