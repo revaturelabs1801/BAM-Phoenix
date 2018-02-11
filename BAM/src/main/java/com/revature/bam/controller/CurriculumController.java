@@ -198,9 +198,7 @@ public class CurriculumController {
 			if (prevMaster != null) {
 				prevMaster.setIsMaster(0);
 				curriculumService.save(prevMaster);
-			} else {
-					LogManager.getRootLogger().error(prevMaster);
-				}
+			}
 		}
 		
 		curriculumService.save(curriculum);
