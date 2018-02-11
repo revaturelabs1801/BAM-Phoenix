@@ -174,7 +174,7 @@ public class SubtopicService {
    * @param subtopicId
    * @return boolean
    * 
-   *         Authors: Sean Sung | (1712-dec10-java-Steve)
+   * @author Sean Sung | (1712-dec10-java-Steve)
    */
   public boolean removeSubtopicFromBatch(int subtopicId) {
 	  try {
