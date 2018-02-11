@@ -168,9 +168,17 @@ public class SubtopicService {
     return subtopicNameRepository.save(subtopicName);
   }
   
+   /**
+   * Service to remove subtopic belonging to a batch.
+   * If exception then return false.
+   * @param subtopicId
+   * @return boolean
+   * 
+   *         Authors: Sean Sung | (1712-dec10-java-Steve)
+   */
   public boolean removeSubtopicFromBatch(int subtopicId) {
 	  try {
-		  subtopicRepository.delete(subtopicId);
+	  	  subtopicRepository.delete(subtopicId);
 		  return true;
 	  } catch(IllegalArgumentException e) {
 		  return false;
