@@ -166,7 +166,8 @@ public class CurriculumController {
 	 * @author Carter Taylor (1712-Steve)
 	 * @param json String that contains curriculum subtopic object 
 	 * addSchedule: method that takes a curriculum subtopic (schedule) as input from
-	 *            request body and saves both curriculum and curriculum subtopic
+	 *            request body and saves both curriculum and curriculum subtopic. Handles case 
+	 *            of incoming curriculum being marked as master version. 
 	 * @return HttpStatus.CREATED if successful
 	 * @throws JsonMappingException
 	 * @throws IOException
@@ -186,6 +187,20 @@ public class CurriculumController {
 		curriculum.setCurriculumVersion(c.getMeta().getCurriculum().getCurriculumVersion());
 		curriculum.setIsMaster(c.getMeta().getCurriculum().getIsMaster());
 
+		if(curriculum.getIsMaster() == 1) {
+			List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(curriculum.getCurriculumName());
+			Curriculum prevMaster = null;
+
+			for (int i = 0; i < curriculumList.size(); i++) {
+				if (curriculumList.get(i).getIsMaster() == 1)
+						prevMaster = curriculumList.get(i);
+			}
+			if (prevMaster != null) {
+				prevMaster.setIsMaster(0);
+				curriculumService.save(prevMaster);
+			}
+		}
+		
 		curriculumService.save(curriculum);
 
 		int numWeeks = c.getWeeks().length;

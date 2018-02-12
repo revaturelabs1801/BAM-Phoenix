@@ -24,22 +24,22 @@ public class SubTopicController {
 	@Autowired
 	SubtopicService subTopicService;
 /**
- * @author Cristian Hermida / Batch 1712-dec10-java-steve
+ * @author Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
  * 
  * @param request
  * 			- I request must have to have the name of the topic.
- * @return HttpStatus
+ * @return The added subtopic (if any) as a SubtopicName and HttpStatus
  * 			- status of 201 CREATED if a Subtopic is created or updated.
  * 			- status of 204 NO_CONTENT is a Subtopic is not created.
  */
 	@PostMapping("add/{typeId}/{topicId}/{subtopicName}")
-	public ResponseEntity<?> addSubTopicName(@PathVariable int typeId, @PathVariable int topicId, @PathVariable String subtopicName) {
+	public ResponseEntity<SubtopicName> addSubTopicName(@PathVariable int typeId, @PathVariable int topicId, @PathVariable String subtopicName) {
 		SubtopicType type = subTopicService.getSubtopicType(typeId);
 		TopicName topic = topicService.getTopicName(topicId);
 		SubtopicName subtopic = new SubtopicName(subtopicName, topic, type);
 		SubtopicName topicUpdate = subTopicService.addOrUpdateSubtopicName(subtopic);
 		if (topicUpdate != null) {
-			return new ResponseEntity<>(HttpStatus.CREATED);
+			return new ResponseEntity<SubtopicName>(topicUpdate, HttpStatus.CREATED);
 		}
 		else {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
