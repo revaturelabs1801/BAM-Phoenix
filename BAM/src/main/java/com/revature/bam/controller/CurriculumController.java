@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -319,6 +318,19 @@ public class CurriculumController {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+	}
+	
+	/**
+	 * @author Carter Taylor, James Holzer (1712-Steve)
+	 * @param RequestBody Curriculum version
+	 * deleteCurriculumVersion: Deletes a curriculum version along with it's related CurriculumSubtopics
+	 * @return HttpStatus.OK if successful
+	 */
+	@PostMapping("deleteversion")
+	public ResponseEntity<?> deleteCurriculumVersion(@RequestBody Curriculum version)
+	{
+		curriculumService.deleteCurriculum(version);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
