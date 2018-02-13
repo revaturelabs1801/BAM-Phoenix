@@ -26,8 +26,6 @@ public class Batch {
 
 	@Id
 	@Column(name = "BATCH_ID")
-	@SequenceGenerator(name = "BATCH_ID_SEQ", sequenceName = "BATCH_ID_SEQ")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BATCH_ID_SEQ")
 	private Integer id;
 
 	@Column(name = "BATCH_NAME")
