@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,7 @@ import com.revature.bam.service.SubtopicService;
 
 @RestController
 @RequestMapping(value = "curriculum/")
+@CrossOrigin(origins="*")
 public class CurriculumController {
 
 	@Autowired
@@ -262,18 +264,21 @@ public class CurriculumController {
 	 */
 	@GetMapping(value = "syncbatch/{id}")
 	public ResponseEntity<?> syncBatch(@PathVariable int id) throws CustomException{
+		//System.out.println("you made it to syncBatch!");
 		Batch currBatch = batchService.getBatchById(id);
 		String batchType = currBatch.getType().getName();
-		
+		//System.out.println(batchType);
 		//get curriculums with same batchTypes
 		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(batchType);
-		
+		//System.out.println(curriculumList);
 		//find the master curriculum; otherwise find one with most up to date version
 		Curriculum c = null;
 		for(int i = 0;  i < curriculumList.size(); i++){
 			//master version found
-			if(curriculumList.get(i).getIsMaster() == 1)
+			if(curriculumList.get(i).getIsMaster() == 1){
 				c = curriculumList.get(i);
+				//System.out.println(c);
+			}
 		}
 		
 		//if master not found, get latest version
@@ -291,9 +296,10 @@ public class CurriculumController {
 		
 		//get all curriculumSubtopics associated with curriculum
 		List<CurriculumSubtopic> subtopicList = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
-		
+		//System.out.println(subtopicList);
 		//logic goes here to add to calendar
-		if(subtopicService.getNumberOfSubtopics(id) ==  0){
+		if(subtopicService.getNumberOfSubtopics(id) !=  0){
+			System.out.println("made it inside conditional");
 			batchService.addCurriculumSubtopicsToBatch(subtopicList, currBatch);
 		}else{
 			//throw new CustomException("Batch already synced");

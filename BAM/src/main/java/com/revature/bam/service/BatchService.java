@@ -66,6 +66,7 @@ public class BatchService {
 	 * @param batch
 	 */
 	public void addCurriculumSubtopicsToBatch(List<CurriculumSubtopic> currSubtopics, Batch batch){
+		System.out.println("you made it to addCurriculumSubtopicsToBatch");
 		Calendar cal = Calendar.getInstance();
 		
 		for(CurriculumSubtopic cSTopic: currSubtopics){
