@@ -173,7 +173,7 @@ public class CurriculumController {
 	 * @throws IOException
 	 */
 	@PostMapping("addcurriculum")
-	public ResponseEntity<?> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
+	public ResponseEntity<Curriculum> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumSubtopicDTO c = mapper.readValue(json, CurriculumSubtopicDTO.class);
 
@@ -201,7 +201,7 @@ public class CurriculumController {
 			}
 		}
 		
-		curriculumService.save(curriculum);
+		Curriculum addedCurr = curriculumService.save(curriculum);
 
 		int numWeeks = c.getWeeks().length;
 		for (int i = 0; i < numWeeks; i++) {
@@ -218,7 +218,7 @@ public class CurriculumController {
 				}
 			}
 		}
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<Curriculum>(addedCurr, HttpStatus.CREATED);
 	}
 
 	/**
