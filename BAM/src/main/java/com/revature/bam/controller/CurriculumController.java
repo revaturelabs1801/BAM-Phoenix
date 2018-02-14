@@ -167,7 +167,7 @@ public class CurriculumController {
 	 * addSchedule: method that takes a curriculum subtopic (schedule) as input from
 	 *            request body and saves both curriculum and curriculum subtopic. Handles case 
 	 *            of incoming curriculum being marked as master version. 
-	 * @return HttpStatus.CREATED if successful
+	 * @return Curriculum, HttpStatus.CREATED if successful
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
