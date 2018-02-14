@@ -53,8 +53,8 @@ public class CurriculumService {
 		return curriculum;
 	}
 	
-	public void save(Curriculum c){
-		curriculumRepository.save(c);
+	public Curriculum save(Curriculum c){
+		return curriculumRepository.save(c);
 	}
 	
 	public List<Curriculum> findAllCurriculumByName(String name){

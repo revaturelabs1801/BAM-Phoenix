@@ -167,12 +167,12 @@ public class CurriculumController {
 	 * addSchedule: method that takes a curriculum subtopic (schedule) as input from
 	 *            request body and saves both curriculum and curriculum subtopic. Handles case 
 	 *            of incoming curriculum being marked as master version. 
-	 * @return HttpStatus.CREATED if successful
+	 * @return Curriculum, HttpStatus.CREATED if successful
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
 	@PostMapping("addcurriculum")
-	public ResponseEntity<?> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
+	public ResponseEntity<Curriculum> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumSubtopicDTO c = mapper.readValue(json, CurriculumSubtopicDTO.class);
 
@@ -200,7 +200,7 @@ public class CurriculumController {
 			}
 		}
 		
-		curriculumService.save(curriculum);
+		Curriculum addedCurr = curriculumService.save(curriculum);
 
 		int numWeeks = c.getWeeks().length;
 		for (int i = 0; i < numWeeks; i++) {
@@ -217,7 +217,7 @@ public class CurriculumController {
 				}
 			}
 		}
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<Curriculum>(addedCurr, HttpStatus.CREATED);
 	}
 
 	/**
