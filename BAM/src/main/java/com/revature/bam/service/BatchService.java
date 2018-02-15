@@ -90,4 +90,16 @@ public class BatchService {
 			subtopicRepository.save(sub);
 		}
 	}
+	
+	/**
+	 * Method to get all currently active batches
+	 * @author Francisco Palomino | Batch: 1712-dec10-java-steve
+	 * @return a list of batches, Http status 200 otherwise Http status 204
+	 * @param end Current date
+	 * @param start Current date
+	 */
+	public List<Batch> currentBatches(Timestamp end, Timestamp start) {
+		return batchRepository.findByEndDateGreaterThanAndStartDateLessThan(end, start);
+	}
+	
 }
