@@ -1,5 +1,6 @@
 package com.revature.bam.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,5 @@ public interface BatchRepository extends JpaRepository<Batch, Integer> {
 	public Batch findById(Integer id);
 	public List<Batch> findAll();
 	public List<Batch> findByTrainer(BamUser trainer);
+	public List<Batch> findByEndDateGreaterThanAndStartDateLessThan(Timestamp end, Timestamp start);
 }
