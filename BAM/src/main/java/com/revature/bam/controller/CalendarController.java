@@ -55,7 +55,7 @@ public class CalendarController {
 	@GetMapping("subtopicspagination/{batchId}/{pageNumber}/{pageSize}")
 	public ResponseEntity<List<Subtopic>> getSubtopicsByBatchPagination(@PathVariable Integer batchId,
 			@PathVariable Integer pageNumber, @PathVariable Integer pageSize) {
-		System.out.println(batchId + " " + pageNumber + " " + pageSize);
+
 		if (batchId == null || pageNumber == null || pageSize == null || pageSize <= 0) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
