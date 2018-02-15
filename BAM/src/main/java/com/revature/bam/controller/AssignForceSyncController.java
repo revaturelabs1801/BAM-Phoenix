@@ -12,9 +12,10 @@ import com.revature.bam.service.AssignForceSyncService;
 @RestController
 @CrossOrigin
 public class AssignForceSyncController {
- 
-  @Autowired
-  AssignForceSyncService service;
+
+	@Autowired
+	AssignForceSyncService service;
+	
 
   /**
    * Syncs batch information from assignforce

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -166,13 +165,14 @@ public class CurriculumController {
 	 * @author Carter Taylor (1712-Steve)
 	 * @param json String that contains curriculum subtopic object 
 	 * addSchedule: method that takes a curriculum subtopic (schedule) as input from
-	 *            request body and saves both curriculum and curriculum subtopic
-	 * @return HttpStatus.CREATED if successful
+	 *            request body and saves both curriculum and curriculum subtopic. Handles case 
+	 *            of incoming curriculum being marked as master version. 
+	 * @return Curriculum, HttpStatus.CREATED if successful
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
 	@PostMapping("addcurriculum")
-	public ResponseEntity<?> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
+	public ResponseEntity<Curriculum> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumSubtopicDTO c = mapper.readValue(json, CurriculumSubtopicDTO.class);
 
@@ -186,7 +186,21 @@ public class CurriculumController {
 		curriculum.setCurriculumVersion(c.getMeta().getCurriculum().getCurriculumVersion());
 		curriculum.setIsMaster(c.getMeta().getCurriculum().getIsMaster());
 
-		curriculumService.save(curriculum);
+		if(curriculum.getIsMaster() == 1) {
+			List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(curriculum.getCurriculumName());
+			Curriculum prevMaster = null;
+
+			for (int i = 0; i < curriculumList.size(); i++) {
+				if (curriculumList.get(i).getIsMaster() == 1)
+						prevMaster = curriculumList.get(i);
+			}
+			if (prevMaster != null) {
+				prevMaster.setIsMaster(0);
+				curriculumService.save(prevMaster);
+			}
+		}
+		
+		Curriculum addedCurr = curriculumService.save(curriculum);
 
 		int numWeeks = c.getWeeks().length;
 		for (int i = 0; i < numWeeks; i++) {
@@ -203,7 +217,7 @@ public class CurriculumController {
 				}
 			}
 		}
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<Curriculum>(addedCurr, HttpStatus.CREATED);
 	}
 
 	/**
@@ -304,6 +318,19 @@ public class CurriculumController {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+	}
+	
+	/**
+	 * @author Carter Taylor, James Holzer (1712-Steve)
+	 * @param RequestBody Curriculum version
+	 * deleteCurriculumVersion: Deletes a curriculum version along with it's related CurriculumSubtopics
+	 * @return HttpStatus.OK if successful
+	 */
+	@PostMapping("deleteversion")
+	public ResponseEntity<?> deleteCurriculumVersion(@RequestBody Curriculum version)
+	{
+		curriculumService.deleteCurriculum(version);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
