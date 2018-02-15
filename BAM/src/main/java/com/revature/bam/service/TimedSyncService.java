@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author Mohamed Swelam / Batch : 1712_dec11_Java_Steve
  * 
- * This a timed schedule service class to be used for routine services.
+ * This a schedule service class to be used for routine services.
  *
  */
 @Service
