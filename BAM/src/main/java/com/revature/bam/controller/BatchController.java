@@ -197,7 +197,7 @@ public class BatchController {
 	 * @author Francisco Palomino | Batch: 1712-dec10-java-steve
 	 * @return a list of batches, Http status 200 otherwise Http status 204
 	 */
-	@GetMapping("currentBatches")
+	@GetMapping("currentbatches")
 	public ResponseEntity<List<Batch>> getAllInProgress() {
 	List<Batch> batchesInProgress = batchService.currentBatches(new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
 	if (!batchesInProgress.isEmpty()) {
