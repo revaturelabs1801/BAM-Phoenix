@@ -30,16 +30,6 @@ public class ServiceAndControllerLogger {
 
 	private static final Logger logger = LogManager.getLogger(ServiceAndControllerLogger.class);
 
-	private final String START_EVENT = "\"startEvent\":";
-	private final String END_EVENT = "\"endEvent\":";
-	private final String RUN_TIME = "\"totalRuntime\":";
-	private final String EXCEPTION = "\"exceptionThrown\":";
-	private final String CTRL_STATUS = "\"returnedControllerStatus\":";
-	private final String CTRL_VALUE = "\"returnedControllerValue\":";
-	private final String SRVC_STATUS = "\"returnedServiceStatus\":";
-	private final String SRVC_VALUE = "\"returnedServiceValue\":";
-	private final String REQ_METHOD = "\"requestMethod\":";
-	
 	/**
 	 * Writes the start of a Controller method call.
 	 * 
