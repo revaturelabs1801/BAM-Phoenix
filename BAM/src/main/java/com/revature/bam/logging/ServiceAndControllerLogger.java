@@ -78,8 +78,10 @@ public class ServiceAndControllerLogger {
 	public void afterControllerThrows(JoinPoint jp, Exception ex) throws Exception {
 		JSONify jsonify = new JSONify();
 		String json = "";
-		json += jsonify.addKey("controllerException") + jsonify.addEndValue(jp.getSignature().getDeclaringTypeName() + "." +
-																			jp.getSignature().getName() + "() -- " + ex.getCause().getMessage());
+		json += jsonify.addKey("controllerException") + jsonify.addValue(ex.getCause().getMessage());
+		json += jsonify.addKey("controllerClass") + jsonify.addValue(jp.getSignature().getDeclaringTypeName());
+		json += jsonify.addKey("controllerMethod") + jsonify.addValue(jp.getSignature().getName());
+		json += jsonify.addKey("stackTrace") + jsonify.addEndValue(ex.getCause().getStackTrace().toString());
 		logger.error(json);
 	}
 
@@ -124,8 +126,10 @@ public class ServiceAndControllerLogger {
 	public void afterServiceThrows(JoinPoint jp, Exception ex) throws Exception {
 		JSONify jsonify = new JSONify();
 		String json = "";
-		json += jsonify.addKey("serviceException") + jsonify.addEndValue(jp.getSignature().getDeclaringTypeName() + "." +
-														 				 jp.getSignature().getName() + "() -- " + ex.getCause().getMessage());
+		json += jsonify.addKey("serviceException") + jsonify.addValue(ex.getCause().getMessage());
+		json += jsonify.addKey("serviceClass") + jsonify.addValue(jp.getSignature().getDeclaringTypeName());
+		json += jsonify.addKey("serviceMethod") + jsonify.addValue(jp.getSignature().getName());
+		json += jsonify.addKey("stackTrace") + jsonify.addEndValue(ex.getCause().getStackTrace().toString());
 		logger.error(json);
 	}
 
