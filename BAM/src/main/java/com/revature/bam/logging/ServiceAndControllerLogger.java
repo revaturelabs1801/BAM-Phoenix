@@ -80,7 +80,7 @@ public class ServiceAndControllerLogger {
 		String json = "";
 		json += jsonify.addKey("controllerException") + jsonify.addEndValue(jp.getSignature().getDeclaringTypeName() + "." +
 																			jp.getSignature().getName() + "() -- " + ex.getCause().getMessage());
-		logger.info(json);
+		logger.error(json);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class ServiceAndControllerLogger {
 		String json = "";
 		json += jsonify.addKey("serviceException") + jsonify.addEndValue(jp.getSignature().getDeclaringTypeName() + "." +
 														 				 jp.getSignature().getName() + "() -- " + ex.getCause().getMessage());
-		logger.info(json);
+		logger.error(json);
 	}
 
 	/**
