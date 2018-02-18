@@ -19,6 +19,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.revature.bam.logging.JSONify;
+
 @Component
 @Entity
 @Table(name = "BATCHES")
@@ -130,8 +132,16 @@ public class Batch {
 
 	@Override
 	public String toString() {
-		return "Batches [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", trainer=" + trainer + ", type=" + type + "]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("Batches") + ":{";
+		json += jsonify.addKey("batchesID") + jsonify.addValue(id.toString());
+		json += jsonify.addKey("batchesName") + jsonify.addValue(name);
+		json += jsonify.addKey("batchesStartDate") + jsonify.addValue(startDate.toString());
+		json += jsonify.addKey("batchesEndDate") + jsonify.addValue(endDate.toString());
+		json += jsonify.addKey("batchesTrainer") + trainer + ",";
+		json += jsonify.addKey("batchesType") + type;
+		json += "}}";
+		return json;
 	}
 
 }

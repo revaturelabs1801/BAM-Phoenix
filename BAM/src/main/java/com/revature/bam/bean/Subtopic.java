@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.revature.bam.logging.JSONify;
+
 @Entity
 @Table(name = "SUBTOPIC")
 @Component
@@ -109,7 +111,14 @@ public class Subtopic {
 
 	@Override
 	public String toString() {
-		return "Subtopic [subtopicId=" + subtopicId + ", batch=" + batch + ", subtopicDate=" + subtopicDate + ", status=" + status +"]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("Subtopic") + ":{";
+		json += jsonify.addKey("subtopicID") + jsonify.addValue(String.valueOf(subtopicId));
+		json += jsonify.addKey("subtopicBatch") + batch + ",";
+		json += jsonify.addKey("subtopicDate") + jsonify.addValue(subtopicDate.toString());
+		json += jsonify.addKey("subtopicStatus") + status;
+		json += "}}";
+		return json;
 	}
 
 }

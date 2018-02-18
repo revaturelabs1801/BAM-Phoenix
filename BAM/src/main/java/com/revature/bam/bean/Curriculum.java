@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Component;
 
+import com.revature.bam.logging.JSONify;
+
 @Component
 @Entity
 @Table(name = "CURRICULUM")
@@ -120,10 +122,19 @@ public class Curriculum {
 
 	@Override
 	public String toString() {
-		return "Curriculum [id=" + id + ", curriculumName=" + curriculumName + ", curriculumVersion="
-				+ curriculumVersion + ", curriculumCreator=" + curriculumCreator + ", curriculumModifier="
-				+ curriculumModifier + ", curriculumdateCreated=" + curriculumdateCreated + ", curriculumNumberOfWeeks="
-				+ curriculumNumberOfWeeks + ", isMaster=" + isMaster + "]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("Curriculum") + ":{";
+		json += jsonify.addKey("curriculumID") + jsonify.addValue(id.toString());
+		json += jsonify.addKey("curriculumName") + jsonify.addValue(curriculumName);
+		json += jsonify.addKey("curriculumVersion") + jsonify.addValue(String.valueOf(curriculumVersion));
+		json += jsonify.addKey("curriculumCreator") + curriculumCreator + ",";
+		json += jsonify.addKey("curriculumModifier") + curriculumModifier + ",";
+		json += jsonify.addKey("curriculumDateCreated") + jsonify.addValue(curriculumdateCreated);
+		json += jsonify.addKey("curriculumNumberOfWeeks") + jsonify.addValue(String.valueOf(curriculumNumberOfWeeks));
+		json += jsonify.addKey("curriculumIsMaster") + jsonify.addEndValue(String.valueOf(isMaster));
+		json += "}}";
+		
+		return json;
 	}
 	
 }

@@ -2,7 +2,7 @@
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">
-            {"timestamp":"%d{yyyy-MM-dd, hh:mm:ss.SSS a}","level":"%p","thread":"[%15.15t] %-40.40c{1.}","message": %m}%n
+            {"timestamp":"%d{yyyy-MM-dd, hh:mm:ss.SSS a}","level":"%p","thread":"[%15.15t] %-40.40c{1.}","message":{ %m}}%n
         </Property>
         <Property name="CONSOLE_PATTERN">
     		%d{yyyy-MM-dd, hh:mm:ss.SSS a} %5p - [%15.15t] %-40.40c{1.} : %m%n%ex

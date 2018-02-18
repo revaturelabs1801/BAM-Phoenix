@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.revature.bam.logging.JSONify;
+
 
 @Entity
 @Table(name = "USERS")
@@ -227,9 +229,21 @@ public class BamUser {
 
 	@Override
 	public String toString() {
-		return "BamUser [userId=" + userId + ", fName=" + fName + ", mName=" + mName + ", lName=" + lName + ", email="
-				+ email + ", pwd=" + pwd + ", role=" + role + ", batch=" + batch + ", phone=" + phone + ", phone2="
-				+ phone2 + ", skype=" + skype + ", pwd2=" + pwd2 + "]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("BamUser") + ":{";
+		json += jsonify.addKey("bamUserID") + jsonify.addValue(String.valueOf(userId));
+		json += jsonify.addKey("bamUserFirstName") + jsonify.addValue(fName);
+		json += jsonify.addKey("bamUserMiddleName") + jsonify.addValue(mName);
+		json += jsonify.addKey("bamUserLastName") + jsonify.addValue(lName);
+		json += jsonify.addKey("bamUserEmail") + jsonify.addValue(email);
+		json += jsonify.addKey("bamUserPassword") + jsonify.addValue(pwd);
+		json += jsonify.addKey("bamUserRole") + jsonify.addValue(String.valueOf(role));
+		json += jsonify.addKey("bamUserPhone") + jsonify.addValue(phone);
+		json += jsonify.addKey("bamUserPhone2") + jsonify.addValue(phone2);
+		json += jsonify.addKey("bamUserSkype") + jsonify.addValue(skype);
+		json += jsonify.addKey("bamUserPassword2") + jsonify.addEndValue(pwd2);
+		json += "}}";
+		
+		return json;
 	}
-
 }
