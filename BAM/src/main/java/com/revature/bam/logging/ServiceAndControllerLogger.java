@@ -21,21 +21,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * 
  * @author Allan Poindexter, David Graves / Batch 1712_dec11th_Java_Steve
  * 
- *         Generic Logger to indicate the start and end of Controllers and
- *         Methods.
+ * Generic Logger to indicate the start and end of Controllers and Methods.
  */
 @Aspect
 @Component
 public class ServiceAndControllerLogger {
 
 	private static final Logger logger = LogManager.getLogger(ServiceAndControllerLogger.class);
+	
+	private final String START_EVENT = "startEvent=";
+	private final String END_EVENT = "endEvent=";
+	private final String RUN_TIME = "totalRuntime=";
+	private final String EXCEPTION = "exceptionThrown=";
+	private final String CTRL_STATUS = "returnedControllerStatus=";
+	private final String CTRL_VALUE = "returnedControllerValue=";
+	private final String SRVC_STATUS = "returnedServiceStatus=";
+	private final String SRVC_VALUE = "returnedServiceValue=";
+	private final String REQ_METHOD = "requestMethod=";
 
 	/**
 	 * Writes the start of a Controller method call.
 	 * 
 	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
 	 * @param jp
-	 *            -The Controller Method
+	 * 		-The Controller Method
 	 */
 	@Before("execution (* com.revature.bam.controller.*.*(..))")
 	public void beforeControllerMethod(JoinPoint jp) {
@@ -46,13 +55,13 @@ public class ServiceAndControllerLogger {
 		json += jsonify.addKey("controllerMethod") + jsonify.addEndValue(jp.getSignature().getName());
 		logger.debug(json);
 	}
-
+	
 	/**
 	 * Writes the end of a Controller method call.
 	 * 
 	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
 	 * @param jp
-	 *            -The Controller Method
+	 * 		-The Controller Method
 	 */
 	@After("execution (* com.revature.bam.controller.*.*(..))")
 	public void afterControllerMethod(JoinPoint jp) {
@@ -63,16 +72,15 @@ public class ServiceAndControllerLogger {
 		json += jsonify.addKey("controllerMethod") + jsonify.addEndValue(jp.getSignature().getName());
 		logger.debug(json);
 	}
-
+	
 	/**
 	 * Writes the exception thrown by a Controller method.
 	 * 
 	 * @author David Graves / Batch 1712_dec11th_Java_Steve
-	 * 		   Allan Poindexter / Batch 1712_dec11th_Java_Steve
 	 * @param jp
-	 *            -The Controller Method
+	 * 		-The Controller Method
 	 * @param ex
-	 *            -The Exception Thrown
+	 * 		-The Exception Thrown
 	 */
 	@AfterThrowing(pointcut = "execution (* com.revature.bam.controller.*.*(..))", throwing = "ex")
 	public void afterControllerThrows(JoinPoint jp, Exception ex) throws Exception {
@@ -82,18 +90,18 @@ public class ServiceAndControllerLogger {
 																			jp.getSignature().getName() + "() -- " + ex.getCause().getMessage());
 		logger.error(json);
 	}
-
+	
 	/**
 	 * Writes the status code of Controller methods.
 	 * 
 	 * @author David Graves / Batch 1712_dec11th_Java_Steve
-	 * 		   Allan Poindexter / Batch 1712_dec11th_Java_Steve
 	 * @param jp
-	 *            -The Controller Method
+	 * 		-The Controller Method
 	 * @param retVal
-	 *            -The ResponseEntity returned
+	 * 		-The ResponseEntity returned
 	 */
-	@AfterReturning(pointcut = "execution (* com.revature.bam.controller.*.*(..))", returning = "retVal")
+	@AfterReturning(pointcut = "execution (* com.revature.bam.controller.*.*(..))", 
+			returning = "retVal")
 	public void afterControllerReturns(JoinPoint jp, ResponseEntity<?> retVal) {
 		JSONify jsonify = new JSONify();
 		String json = "";
@@ -109,16 +117,15 @@ public class ServiceAndControllerLogger {
 			logger.info(json);
 		}
 	}
-
+	
 	/**
 	 * Writes the exception thrown by a Service method.
 	 * 
 	 * @author David Graves / Batch 1712_dec11th_Java_Steve
-	 * 		   Allan Poindexter / Batch 1712_dec11th_Java_Steve
 	 * @param jp
-	 *            -The Service Method
+	 * 		-The Service Method
 	 * @param ex
-	 *            -The Exception Thrown
+	 * 		-The Exception Thrown
 	 */
 	@AfterThrowing(pointcut = "execution (* com.revature.bam.service.*.*(..))", throwing = "ex")
 	public void afterServiceThrows(JoinPoint jp, Exception ex) throws Exception {
@@ -128,18 +135,18 @@ public class ServiceAndControllerLogger {
 														 				 jp.getSignature().getName() + "() -- " + ex.getCause().getMessage());
 		logger.error(json);
 	}
-
+	
 	/**
 	 * Writes the returned value of Service methods.
 	 * 
 	 * @author David Graves / Batch 1712_dec11th_Java_Steve
-	 * 		   Allan Poindexter / Batch 1712_dec11th_Java_Steve
 	 * @param jp
-	 *            -The Service Method
+	 * 		-The Service Method
 	 * @param retVal
-	 *            -The value returned
+	 * 		-The value returned
 	 */
-	@AfterReturning(pointcut = "execution (* com.revature.bam.service.*.*(..))", returning = "retVal")
+	@AfterReturning(pointcut = "execution (* com.revature.bam.service.*.*(..))", 
+			returning = "retVal")
 	public void afterServiceReturns(JoinPoint jp, Object retVal) {
 		JSONify jsonify = new JSONify();
 		String json = "";
@@ -148,13 +155,13 @@ public class ServiceAndControllerLogger {
 		json += jsonify.addKey("returnedServiceValue") + retVal;
 		logger.info(json);
 	}
-
+	
 	/**
 	 * Writes the start of a Service method call.
 	 * 
 	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
 	 * @param jp
-	 *            -The Service Method
+	 * 		-The Service Method
 	 */
 	@Before("execution (* com.revature.bam.service.*.*(..))")
 	public void beforeServiceMethod(JoinPoint jp) {
@@ -165,13 +172,13 @@ public class ServiceAndControllerLogger {
 		json += jsonify.addKey("serviceMethod") + jsonify.addEndValue(jp.getSignature().getName());
 		logger.debug(json);
 	}
-
+	
 	/**
 	 * Writes the end of a Service method call.
 	 * 
 	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
 	 * @param jp
-	 *            -The Service Method
+	 * 		-The Service Method
 	 */
 	@After("execution (* com.revature.bam.service.*.*(..))")
 	public void afterServiceMethod(JoinPoint jp) {
@@ -182,21 +189,22 @@ public class ServiceAndControllerLogger {
 		json += jsonify.addKey("serviceMethod") + jsonify.addEndValue(jp.getSignature().getName());
 		logger.debug(json);
 	}
-
+	
 	/**
-	 * Displays the run time for Service or Controller methods. For the Controller,
-	 * it will display the total runtime.
+	 * Displays the run time for Service or Controller methods.
+	 * For the Controller, it will display the total runtime.
 	 * 
 	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
 	 * @param pjp
-	 *            - The Service or Controller Methods
-	 * @return - object. This is required, or else the controller will return a
-	 *         blank JSON object, or a service will throw a NullPointerException.
-	 * @throws -
-	 *             Throwable. This is required when using
-	 *             PreceedingJoinPoint.proceed()
+	 * 		- The Service or Controller Methods
+	 * @return
+	 * 		- object. This is required, or else the controller will return a blank JSON object,
+	 * 				  or a service will throw a NullPointerException.
+	 * @throws
+	 * 		- Throwable. This is required when using PreceedingJoinPoint.proceed()
 	 */
-	@Around("execution (* com.revature.bam.controller.*.*(..)) ||" + "execution (* com.revature.bam.service.*.*(..))")
+	@Around("execution (* com.revature.bam.controller.*.*(..)) ||"
+		  + "execution (* com.revature.bam.service.*.*(..))")
 	public Object classNameAndTime(ProceedingJoinPoint pjp) throws Throwable {
 		long start = System.currentTimeMillis();
 		Object object = pjp.proceed();
@@ -212,17 +220,14 @@ public class ServiceAndControllerLogger {
 	}
 
 	/**
-	 * Indicates a GET mapped method has fired. POST equivalent does not exist. See
-	 * Issue on GitHub.
+	 * Indicates a GET mapped method has fired. POST equivalent does not exist. See Issue on GitHub.
 	 * 
-	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve
+	 * @author Allan Poindexter / Batch 1712_dec11th_Java_Steve  
 	 * @param classRequestMapping
 	 * @param getMapping
 	 */
 	@Pointcut("@target(classRequestMapping) && @annotation(getMapping) && execution(* com.revature.bam.controller.*.*(..))")
-	public void controller(RequestMapping classRequestMapping, GetMapping getMapping) {
-	}
-
+	public void	controller(RequestMapping classRequestMapping, GetMapping getMapping) {}
 	@Before("controller(classRequestMapping, getMapping)")
 	public void advice(JoinPoint jp, RequestMapping classRequestMapping, GetMapping getMapping) {
 		JSONify jsonify = new JSONify();
