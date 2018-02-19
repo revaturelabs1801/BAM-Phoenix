@@ -1,6 +1,7 @@
 package com.revature.bam.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,8 @@ import com.revature.bam.service.BatchService;
 import com.revature.bam.service.CurriculumService;
 import com.revature.bam.service.CurriculumSubtopicService;
 import com.revature.bam.service.SubtopicService;
+
+import ch.qos.logback.core.net.SyslogOutputStream;
 
 @RestController
 @RequestMapping(value = "curriculum/")
@@ -306,12 +309,50 @@ public class CurriculumController {
 		}
 		//get all curriculumSubtopics associated with curriculum
 		List<CurriculumSubtopic> subtopicList = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
+		
+//		List<CurriculumSubtopic> subtopicListMon = (List<CurriculumSubtopic>) subtopicList.stream().filter(sub -> sub.getCurriculumSubtopicDay() == 1);
+//		System.out.println(subtopicListMon);
+//		List<CurriculumSubtopic> subtopicListMonday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 1);
+//		List<CurriculumSubtopic> subtopicListTuesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 2);
+//		List<CurriculumSubtopic> subtopicListWednesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 3);
+//		List<CurriculumSubtopic> subtopicListThursday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 4);
+//		List<CurriculumSubtopic> subtopicListFriday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 5);
 		//System.out.println(subtopicList);
+		
+		List<CurriculumSubtopic> subtopicListMon = new ArrayList<>();
+		List<CurriculumSubtopic> subtopicListTues = new ArrayList<>();
+		for(CurriculumSubtopic cs: subtopicList)
+		{
+			//System.out.println(cs.getCurriculumSubtopicWeek() + "  " + cs.getCurriculumSubtopicDay());
+			if(cs.getCurriculumSubtopicDay() == 1)
+			{
+				CurriculumSubtopic monSubtopic = new CurriculumSubtopic();
+				monSubtopic.setCurriculumSubtopicNameId(cs.getCurriculumSubtopicNameId());
+				monSubtopic.setCurriculumSubtopicWeek(cs.getCurriculumSubtopicWeek());
+				monSubtopic.setCurriculumSubtopicDay(1);
+				subtopicListMon.add(monSubtopic);
+			}
+			else if(cs.getCurriculumSubtopicDay() == 2)
+			{
+				CurriculumSubtopic tuesSubtopic = new CurriculumSubtopic();
+				tuesSubtopic.setCurriculumSubtopicNameId(cs.getCurriculumSubtopicNameId());
+				tuesSubtopic.setCurriculumSubtopicWeek(cs.getCurriculumSubtopicWeek());
+				tuesSubtopic.setCurriculumSubtopicDay(1);
+				subtopicListTues.add(tuesSubtopic);
+			}
+		}
+		System.out.println(subtopicListMon);
+		System.out.println(subtopicListTues);
 		System.out.println("this takes forever");
 		//logic goes here to add to calendar
-		if(subtopicService.getNumberOfSubtopics(id) !=  0){
+		//if(subtopicService.getNumberOfSubtopics(id) !=  0){
+		if(true){
 			System.out.println("made it inside conditional");
-			batchService.addCurriculumSubtopicsToBatch(subtopicList, currBatch);
+//			batchService.addCurriculumSubtopicsToBatch(subtopicListMon, currBatch);
+//			batchService.addCurriculumSubtopicsToBatch(subtopicListTuesday, currBatch);
+//			batchService.addCurriculumSubtopicsToBatch(subtopicListWednesday, currBatch);
+//			batchService.addCurriculumSubtopicsToBatch(subtopicListThursday, currBatch);
+//			batchService.addCurriculumSubtopicsToBatch(subtopicListFriday, currBatch);
 		}else{
 			//throw new CustomException("Batch already synced");
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -85,12 +85,12 @@ public class BatchService {
 			sub.setBatch(batch);
 			sub.setSubtopicName((subtopicNameRepository.findById(cSTopic.getCurriculumSubtopicNameId().getId())));
 			sub.setStatus(subtopicService.getStatus("Pending"));
-			System.out.println(batch.getStartDate());
+			
 			//Get the absolute day of batch that the subtopic should be added to
 			int sDay = cSTopic.getCurriculumSubtopicDay();
 			int sWeek = cSTopic.getCurriculumSubtopicWeek();
 			int absoluteDayOfBatch = (sWeek-1)*7 + sDay - 1;
-			System.out.println(absoluteDayOfBatch);
+			//System.out.println(absoluteDayOfBatch);
 			//Set the subtopics date using the batches start date and the 
 			//previously derived absolute day of batch.
 			//System.out.println(batch.getStartDate());
@@ -127,7 +127,7 @@ public class BatchService {
 			
 			prevSubtopicIndex = currentSubtopicIndex;
 			currentSubtopicIndex++;
-			System.out.println(sub.getSubtopicDate());
+			//System.out.println(sub.getSubtopicDate());
 			//subtopicRepository.save(sub);
 		}
 		
