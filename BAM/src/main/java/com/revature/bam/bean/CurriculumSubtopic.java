@@ -17,6 +17,7 @@ import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.revature.bam.logging.JSONify;
 
 @Component
 @Entity
@@ -103,10 +104,16 @@ public class CurriculumSubtopic {
 
 	@Override
 	public String toString() {
-		return "CurriculumSubtopic [curriculumSubtopic_Id=" + curriculumSubtopicId + ", curriculumSubtopicNameId="
-				+ curriculumSubtopicNameId + ", curriculumSubtopicCurriculumID=" + curriculum
-				+ ", curriculumSubtopicWeek=" + curriculumSubtopicWeek + ", curriculumSubtopicDay="
-				+ curriculumSubtopicDay + "]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("CurriculumSubtopic") + ":{";
+		json += jsonify.addKey("curriculumSubtopicID") + jsonify.addValue(String.valueOf(curriculumSubtopicId));
+		json += jsonify.addKey("curriculumSubtopicNameID") + curriculumSubtopicNameId + ",";
+		json += jsonify.addKey("curriculumSubtopicCurriculumID") + curriculum + ",";
+		json += jsonify.addKey("curriculumSubtopicWeek") + jsonify.addValue(String.valueOf(curriculumSubtopicWeek));
+		json += jsonify.addKey("curriculumSubtopicDay") + jsonify.addEndValue(String.valueOf(curriculumSubtopicDay));
+		json += "}}";
+		
+		return json;
 	}
 
 	
