@@ -2,6 +2,7 @@ package com.revature.bam.service;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -69,6 +70,14 @@ public class BatchService {
 		System.out.println("you made it to addCurriculumSubtopicsToBatch");
 		Calendar cal = Calendar.getInstance();
 		
+	
+		
+		int prevSubtopicIndex = 0;
+		int currentSubtopicIndex = 0;
+		
+		int defaultStartTimeHour= 9;
+		int currentStartTimeHour= 9;
+		
 		for(CurriculumSubtopic cSTopic: currSubtopics){
 			Subtopic sub = new Subtopic();
 			
@@ -76,19 +85,51 @@ public class BatchService {
 			sub.setBatch(batch);
 			sub.setSubtopicName((subtopicNameRepository.findById(cSTopic.getCurriculumSubtopicNameId().getId())));
 			sub.setStatus(subtopicService.getStatus("Pending"));
-			
+			System.out.println(batch.getStartDate());
 			//Get the absolute day of batch that the subtopic should be added to
 			int sDay = cSTopic.getCurriculumSubtopicDay();
 			int sWeek = cSTopic.getCurriculumSubtopicWeek();
 			int absoluteDayOfBatch = (sWeek-1)*7 + sDay - 1;
-			
+			System.out.println(absoluteDayOfBatch);
 			//Set the subtopics date using the batches start date and the 
 			//previously derived absolute day of batch.
+			//System.out.println(batch.getStartDate());
 			cal.setTime(batch.getStartDate());
 			cal.add(Calendar.DAY_OF_WEEK, absoluteDayOfBatch);
-			sub.setSubtopicDate(new Timestamp(cal.getTime().getTime()));
 			
-			subtopicRepository.save(sub);
+			if(currentSubtopicIndex == 0)
+			{
+				cal.set(Calendar.HOUR_OF_DAY, defaultStartTimeHour);
+			}
+			else
+			{
+				CurriculumSubtopic prev = currSubtopics.get(prevSubtopicIndex);
+				CurriculumSubtopic current = currSubtopics.get(currentSubtopicIndex);
+				//System.out.println("prev: " + prev.getCurriculumSubtopicWeek() + " " + prev.getCurriculumSubtopicDay());
+				//System.out.println("curr: " + current.getCurriculumSubtopicWeek() + " " + current.getCurriculumSubtopicDay());
+				if(prev.getCurriculumSubtopicWeek() == current.getCurriculumSubtopicWeek() && prev.getCurriculumSubtopicDay() == current.getCurriculumSubtopicDay()){
+					currentStartTimeHour = (currentStartTimeHour + 1) % 22;
+					cal.set(Calendar.HOUR_OF_DAY, currentStartTimeHour);
+				}
+				else
+				{
+					currentStartTimeHour = defaultStartTimeHour;
+					cal.set(Calendar.HOUR_OF_DAY, defaultStartTimeHour);
+				}
+			}
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			
+			Timestamp t = new Timestamp(cal.getTime().getTime());
+			//System.out.println(new Date(t.getTime()));
+			sub.setSubtopicDate(t);
+			
+			prevSubtopicIndex = currentSubtopicIndex;
+			currentSubtopicIndex++;
+			System.out.println(sub.getSubtopicDate());
+			//subtopicRepository.save(sub);
 		}
+		
 	}
 }

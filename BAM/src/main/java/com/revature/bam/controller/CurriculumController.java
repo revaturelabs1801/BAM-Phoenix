@@ -264,13 +264,14 @@ public class CurriculumController {
 	 */
 	@GetMapping(value = "syncbatch/{id}")
 	public ResponseEntity<?> syncBatch(@PathVariable int id) throws CustomException{
-		//System.out.println("you made it to syncBatch!");
+		System.out.println("you made it to syncBatch!");
 		Batch currBatch = batchService.getBatchById(id);
 		String batchType = currBatch.getType().getName();
-		//System.out.println(batchType);
+		System.out.println(batchType);
 		//get curriculums with same batchTypes
-		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(batchType);
-		//System.out.println(curriculumList);
+		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByNameAndIsMaster(batchType,1);
+		//List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(batchType);
+		System.out.println(curriculumList);
 		//find the master curriculum; otherwise find one with most up to date version
 		Curriculum c = null;
 		for(int i = 0;  i < curriculumList.size(); i++){
@@ -283,20 +284,30 @@ public class CurriculumController {
 		
 		//if master not found, get latest version
 		if(c == null){
-			int min = curriculumList.get(0).getCurriculumVersion();
-			Curriculum tempCurric = curriculumList.get(0);
-			for(int i = 1; i < curriculumList.size(); i++){
-				if(curriculumList.get(i).getCurriculumVersion() > min){
-					min = curriculumList.get(i).getCurriculumVersion();
-					tempCurric = curriculumList.get(i);
+			System.out.println("you made it to find latest version");
+			curriculumList = curriculumService.findAllCurriculumByName(batchType);
+			if(curriculumList != null)
+			{
+				System.out.println(curriculumList);
+				int min = curriculumList.get(0).getCurriculumVersion();
+				Curriculum tempCurric = curriculumList.get(0);
+				for(int i = 1; i < curriculumList.size(); i++){
+					if(curriculumList.get(i).getCurriculumVersion() > min){
+						min = curriculumList.get(i).getCurriculumVersion();
+						tempCurric = curriculumList.get(i);
+					}
 				}
+				c = tempCurric;
 			}
-			c = tempCurric;
+			else
+			{
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
+			}
 		}
-		
 		//get all curriculumSubtopics associated with curriculum
 		List<CurriculumSubtopic> subtopicList = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
 		//System.out.println(subtopicList);
+		System.out.println("this takes forever");
 		//logic goes here to add to calendar
 		if(subtopicService.getNumberOfSubtopics(id) !=  0){
 			System.out.println("made it inside conditional");
