@@ -35,11 +35,11 @@ public class SubTopicController {
  * 			- status of 201 CREATED if a Subtopic is created or updated.
  * 			- status of 204 NO_CONTENT is a Subtopic is not created.
  */
-
-	@GetMapping("/{id}")
-	public Subtopic getSubtopic(@PathVariable int id){
-		return subTopicService.getSubtopic(id);
-	}
+//
+//	@GetMapping("/{id}")
+//	public Subtopic getSubtopic(@PathVariable int id){
+//		return subTopicService.getSubtopic(id);
+//	}
 	
 	@PostMapping("/updatestatus")
 	public ResponseEntity<Subtopic> updateSubtopicStatus(@RequestBody Subtopic subtopic){
@@ -87,4 +87,14 @@ public class SubTopicController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@PostMapping("removebybatch/{batchId}")
+	public ResponseEntity<?> removeSubtopicByBatch(@PathVariable int batchId) {
+		if(subTopicService.removeAllSubtopicsFromBatch(batchId)) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 }

@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -179,6 +181,18 @@ public class SubtopicService {
   public boolean removeSubtopicFromBatch(int subtopicId) {
 	  try {
 	  	  subtopicRepository.delete(subtopicId);
+		  return true;
+	  } catch(IllegalArgumentException e) {
+		  return false;
+	  } 
+  }
+  
+  @Transactional
+  public boolean removeAllSubtopicsFromBatch(int batchId) {
+	  try {
+		  Batch batch = new Batch();
+		  batch.setId(batchId);
+		  subtopicRepository.deleteByBatch(batch);
 		  return true;
 	  } catch(IllegalArgumentException e) {
 		  return false;

@@ -38,4 +38,6 @@ public interface SubtopicRepository extends JpaRepository<Subtopic, Integer> {
 	 * @author  Michael Garza, Gary LaMountain
 	 */
 	List<Subtopic> findByBatch(Batch batch, Pageable pageable);
+	
+	void deleteByBatch(Batch batch);
 }
