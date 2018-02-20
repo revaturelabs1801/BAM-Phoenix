@@ -289,21 +289,16 @@ public class CurriculumController {
 	 */
 	@GetMapping(value = "syncbatch/{id}")
 	public ResponseEntity<?> syncBatch(@PathVariable int id) throws CustomException{
-		System.out.println("you made it to syncBatch!");
 		Batch currBatch = batchService.getBatchById(id);
 		String batchType = currBatch.getType().getName();
-		System.out.println(batchType);
-		//get curriculums with same batchTypes
 		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByNameAndIsMaster(batchType,1);
-		//List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(batchType);
-		System.out.println(curriculumList);
-		//find the master curriculum; otherwise find one with most up to date version
+
+		//get master version
 		Curriculum c = null;
 		for(int i = 0;  i < curriculumList.size(); i++){
 			//master version found
 			if(curriculumList.get(i).getIsMaster() == 1){
 				c = curriculumList.get(i);
-				//System.out.println(c);
 			}
 		}
 		
@@ -311,9 +306,7 @@ public class CurriculumController {
 		if(c == null){
 			System.out.println("you made it to find latest version");
 			curriculumList = curriculumService.findAllCurriculumByName(batchType);
-			if(curriculumList != null)
-			{
-				System.out.println(curriculumList);
+			if(curriculumList != null){
 				int min = curriculumList.get(0).getCurriculumVersion();
 				Curriculum tempCurric = curriculumList.get(0);
 				for(int i = 1; i < curriculumList.size(); i++){
@@ -324,8 +317,7 @@ public class CurriculumController {
 				}
 				c = tempCurric;
 			}
-			else
-			{
+			else{
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
 			}
 		}
@@ -349,8 +341,6 @@ public class CurriculumController {
 		ArrayList<Subtopic> subtopics = new ArrayList<>();
 		
 		map.forEach((day, weeks) -> {
-			//System.out.println("day " + day + " contains weeks " + weeks);
-			
 			Calendar cal = Calendar.getInstance();
 
 		    Random rand = new Random(System.currentTimeMillis());
@@ -363,11 +353,9 @@ public class CurriculumController {
 			    
 				Subtopic subtopic = new Subtopic();
 				
-				
 				subtopic.setBatch(currBatch);
 				subtopic.setSubtopicName(curriculumSubtopic.getCurriculumSubtopicNameId());
 				subtopic.setStatus(subStatus);
-				
 				
 				cal.setTime(currBatch.getStartDate());
 				
@@ -380,7 +368,6 @@ public class CurriculumController {
 				int absDay = (week-1)*7 + day - 1;
 				
 				cal.add(Calendar.DAY_OF_WEEK, absDay);
-				
 				
 				subtopic.setSubtopicDate(new Timestamp(cal.getTime().getTime()));
 				subtopics.add(subtopic);
