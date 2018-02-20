@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.revature.bam.logging.JSONify;
+
 @Component
 @Entity
 @Table(name = "TOPIC_WEEK")
@@ -92,7 +94,14 @@ public class TopicWeek {
 
 	@Override
 	public String toString() {
-		return "TopicWeek [id=" + id + ", topic=" + topic + ", batch=" + batch + ", weekNumber=" + weekNumber + "]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("TopicWeek") + ":{";
+		json += jsonify.addKey("topicWeekID") + jsonify.addValue(String.valueOf(id));
+		json += jsonify.addKey("topicWeekTopic") + topic + ",";
+		json += jsonify.addKey("topicWeekBatch") + batch + ",";
+		json += jsonify.addKey("topicWeekNumber") + jsonify.addEndValue(weekNumber.toString());
+		json += "}}";
+		return json;
 	}
 
 }

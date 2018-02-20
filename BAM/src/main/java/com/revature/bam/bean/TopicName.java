@@ -10,6 +10,8 @@ import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
 
+import com.revature.bam.logging.JSONify;
+
 @Component
 @Entity
 @Table(name = "TOPIC_NAME")
@@ -57,7 +59,12 @@ public class TopicName {
 
 	@Override
 	public String toString() {
-		return "TopicName [id=" + id + ", name=" + name + "]";//NOSONAR
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("TopicName") + ":{";
+		json += jsonify.addKey("topicNameID") + jsonify.addValue(String.valueOf(id));
+		json += jsonify.addKey("topicNameValue") + jsonify.addEndValue(name);
+		json += "}}";
+		return json;//NOSONAR
 	}
 
 }

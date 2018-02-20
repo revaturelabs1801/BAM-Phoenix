@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -45,16 +42,16 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
-@RequestMapping(value = "curriculum/")
-@CrossOrigin(origins="*")
+@RequestMapping("curriculum/")
+@CrossOrigin
 public class CurriculumController {
 
 	@Autowired
 	CurriculumService curriculumService;
-	
+
 	@Autowired
 	CurriculumSubtopicService curriculumSubtopicService;
-	
+
 	@Autowired
 	SubtopicService subtopicService;
 	
@@ -64,113 +61,114 @@ public class CurriculumController {
 	@Autowired 
 	BatchService batchService;
 
-	public CurriculumService get(){
+	public CurriculumService get() {
 		return curriculumService;
 	}
-	
+
 	/***
-	 * @author Nam Mai
+	 * @author Nam Mai 
 	 * Method is needed for injecting mocked services for unit test
 	 */
 	@Autowired
-	public CurriculumController(CurriculumService cs, CurriculumSubtopicService css, SubtopicService ss){
+	public CurriculumController(CurriculumService cs, CurriculumSubtopicService css, SubtopicService ss) {
 		curriculumService = cs;
-		curriculumSubtopicService =css;
+		curriculumSubtopicService = css;
 		subtopicService = ss;
 	}
+
 	/**
 	 * @author Carter Taylor (1712-Steve), Olayinka Ewumi (1712-Steve)
 	 * getAllCurriculum: method to get all curriculums
-	 * @return List<Curriculum>, HttpStatus.OK if successful,
-	 * 		HttpStatus.NO_CONTENT if list is empty 
+	 * @return List<Curriculum>, HttpStatus.OK if successful, HttpStatus.NO_CONTENT
+	 *         if list is empty
 	 */
-	@GetMapping(value = "all")
-	@ResponseBody
-	public ResponseEntity<List<Curriculum>> getAllCurriculum(){
+	@GetMapping("all")
+	public ResponseEntity<List<Curriculum>> getAllCurriculum() {
 		List<Curriculum> result = curriculumService.getAllCurriculum();
-		if(result != null && !result.isEmpty()) {
+		if (result != null && !result.isEmpty()) {
 			return new ResponseEntity<List<Curriculum>>(result, HttpStatus.OK);
-		} 
+		}
 		return new ResponseEntity<List<Curriculum>>(HttpStatus.NO_CONTENT);
 	}
-	
+
 	/**
 	 * @author Carter Taylor (1712-Steve), Olayinka Ewumi (1712-Steve)
 	 * getCurriculumById: method to get a Curriculum by its Id
-	 * @return Curriculum, HttpStatus.OK if successful
-	 * 		HttpStatus.NO_CONTENT if id doesn't match, 
-	 * 		HttpStatus.BAD_REQUEST if missing parameters
+	 * @return Curriculum, HttpStatus.OK if successful HttpStatus.NO_CONTENT if id
+	 *         doesn't match, HttpStatus.BAD_REQUEST if missing parameters
 	 */
-	@GetMapping(value = "getcurriculum")
-	@ResponseBody
-	public ResponseEntity<Curriculum> getCurriculumById(HttpServletRequest request){
-		String paramId = request.getParameter("curriculumId");
-		if(paramId == null) {
+	@GetMapping("getcurriculum/{cId}")
+	public ResponseEntity<Curriculum> getCurriculumById(@PathVariable int cId) {
+
+		Curriculum result = new Curriculum();
+
+		try {
+			result = curriculumService.getCuricullumById(cId);
+		} catch (NullPointerException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		int curriculumId = Integer.parseInt(paramId);
-		Curriculum result = curriculumService.getCuricullumById(curriculumId);
-		
-		if(result != null) {
+
+		if (result != null) {
 			return new ResponseEntity<Curriculum>(result, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
+
 	/**
 	 * @author Carter Taylor (1712-Steve), Olayinka Ewumi (1712-Steve)
-	 * @param request HttpServletRequest that holds curriculumId as parameter
-	 * getAllCurriculumSchedules: method to retrieve list of curriculum subtopics
-	 * 		given a curriculumId
+	 * @param PathVariable: int cId
+	 *            holds curriculumId
+	 * getAllCurriculumSchedules: method to retrieve list of curriculum
+	 *            subtopics given a curriculumId
 	 * @return List<CurriculumSubtopics>, HttpStatus.OK if successful
-	 * 		HttpStatus.NO_CONTENT if id doesn't match, 
-	 * 		HttpStatus.BAD_REQUEST if missing parameters
+	 *         HttpStatus.NO_CONTENT if id doesn't match, HttpStatus.BAD_REQUEST if
+	 *         missing parameters
 	 */
-	@GetMapping(value = "schedule")
-	@ResponseBody
-	public ResponseEntity<List<CurriculumSubtopic>> getAllCurriculumSchedules(HttpServletRequest request){
-		String paramId = request.getParameter("curriculumId");
-		if(paramId == null) {
+	@GetMapping("schedule/{cId}")
+	public ResponseEntity<List<CurriculumSubtopic>> getAllCurriculumSchedules(@PathVariable int cId) {
+
+		Curriculum c = new Curriculum();
+
+		try {
+			c = curriculumService.getCuricullumById(cId);
+		} catch (NullPointerException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		int curriculumId = Integer.parseInt(paramId);
-		Curriculum c = new Curriculum();
-		c.setCurriculumId(curriculumId);
-		
+
+		c.setId(cId);
+
 		List<CurriculumSubtopic> result = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
 		if (result != null && !result.isEmpty()) {
 			return new ResponseEntity<List<CurriculumSubtopic>>(result, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
+
 	/**
-	 * @author Carter Taylor (1712-Steve), Olayinka Ewumi (1712-Steve)
-	 * getTopicPool: method to get list of topics
+	 * @author Carter Taylor (1712-Steve), Olayinka Ewumi (1712-Steve) getTopicPool:
+	 *         method to get list of topics
 	 * @return List<SubtopicName>, HttpStatus.OK if successful,
-	 * 		HttpStatus.NO_CONTENT if list is empty 
+	 *         HttpStatus.NO_CONTENT if list is empty
 	 */
-	@GetMapping(value = "topicpool")
-	@ResponseBody
-	public ResponseEntity<List<SubtopicName>> getTopicPool(){
+	@GetMapping("topicpool")
+	public ResponseEntity<List<SubtopicName>> getTopicPool() {
 		List<SubtopicName> result = subtopicService.getAllSubtopics();
 		if (result != null && !result.isEmpty()) {
 			return new ResponseEntity<List<SubtopicName>>(result, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
+
 	/**
 	 * @author Carter Taylor (1712-Steve), Olayinka Ewumi (1712-Steve)
 	 * getSubtopicPool: method to get list of subtopics with associated
-	 * 		batch and status
-	 * @return List<Subtopic>, HttpStatus.OK if successful,
-	 * 		HttpStatus.NO_CONTENT if list is empty 
+	 *         batch and status
+	 * @return List<Subtopic>, HttpStatus.OK if successful, HttpStatus.NO_CONTENT if
+	 *         list is empty
 	 */
-	@GetMapping(value = "subtopicpool")
-	@ResponseBody
-	public	ResponseEntity<List<Subtopic>> getSubtopicPool(){
-		List<Subtopic> result =  subtopicService.getSubtopics();
+	@GetMapping("subtopicpool")
+	public ResponseEntity<List<Subtopic>> getSubtopicPool() {
+		List<Subtopic> result = subtopicService.getSubtopics();
 		if (result != null && !result.isEmpty()) {
 			return new ResponseEntity<List<Subtopic>>(result, HttpStatus.OK);
 		}
@@ -180,18 +178,19 @@ public class CurriculumController {
 	/**
 	 * @author Carter Taylor (1712-Steve)
 	 * @param json String that contains curriculum subtopic object 
-	 * addSchedule: method that takes a curriculum subtopic (schedule) as input
-	 * 		from request body and saves both curriculum and curriculum subtopic
-	 * @return HttpStatus.CREATED if successful
+	 * addSchedule: method that takes a curriculum subtopic (schedule) as input from
+	 *            request body and saves both curriculum and curriculum subtopic. Handles case 
+	 *            of incoming curriculum being marked as master version. 
+	 * @return Curriculum, HttpStatus.CREATED if successful
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	@PostMapping(value = "addcurriculum")
-	public ResponseEntity<?> addSchedule(@RequestBody String json) throws JsonMappingException, IOException{
+	@PostMapping("addcurriculum")
+	public ResponseEntity<Curriculum> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumSubtopicDTO c = mapper.readValue(json, CurriculumSubtopicDTO.class);
-		
-		//save curriculum object first
+
+		// save curriculum object first
 
 		Curriculum curriculum = new Curriculum();
 		curriculum.setCurriculumCreator(c.getMeta().getCurriculum().getCurriculumCreator());
@@ -201,15 +200,28 @@ public class CurriculumController {
 		curriculum.setCurriculumVersion(c.getMeta().getCurriculum().getCurriculumVersion());
 		curriculum.setIsMaster(c.getMeta().getCurriculum().getIsMaster());
 
-		curriculumService.save(curriculum);
+		if(curriculum.getIsMaster() == 1) {
+			List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(curriculum.getCurriculumName());
+			Curriculum prevMaster = null;
+
+			for (int i = 0; i < curriculumList.size(); i++) {
+				if (curriculumList.get(i).getIsMaster() == 1)
+						prevMaster = curriculumList.get(i);
+			}
+			if (prevMaster != null) {
+				prevMaster.setIsMaster(0);
+				curriculumService.save(prevMaster);
+			}
+		}
 		
+		Curriculum addedCurr = curriculumService.save(curriculum);
 
 		int numWeeks = c.getWeeks().length;
-		for(int i = 0; i < numWeeks; i++){
+		for (int i = 0; i < numWeeks; i++) {
 			DaysDTO[] days = c.getWeeks()[i].getDays();
-			for(int j = 0; j < days.length; j++){
+			for (int j = 0; j < days.length; j++) {
 				SubtopicName[] subtopic = days[j].getSubtopics();
-				for(int k = 0; k < subtopic.length; k++){
+				for (int k = 0; k < subtopic.length; k++) {
 					CurriculumSubtopic cs = new CurriculumSubtopic();
 					cs.setCurriculumSubtopicCurriculumID(curriculum);
 					cs.setCurriculumSubtopicNameId(subtopic[k]);
@@ -219,61 +231,65 @@ public class CurriculumController {
 				}
 			}
 		}
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<Curriculum>(addedCurr, HttpStatus.CREATED);
 	}
-	/**
-	 * @author Carter Taylor (1712-Steve)
-	 * @param HttpServletRequest that holds curriculumId as parameter
-	 * markCurricullumAsMaster: marks selected curriculum as master version 
-	 * 		(identified by id sent as request parameter), and sets previous 
-	 * 		master version to non-master status.
-	 * @return HttpStatus.BAD_REQUEST if missing parameter,
-	 * 		HttpStatus.ACCEPTED if successful
-	 */
-	@GetMapping(value = "makemaster")
-	public ResponseEntity<?> markCurriculumAsMaster(HttpServletRequest request){
-		String paramId = request.getParameter("curriculumId");
-		if(paramId == null)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		
-		int currId = Integer.parseInt(paramId);
-		
-		Curriculum c = curriculumService.getCuricullumById(currId);
-		c.setIsMaster(1);
-		
-		//find the curriculum with same name and isMaster = 1; set to 0; save
-		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(c.getCurriculumName());
-		
-	    try {
-	        Curriculum prevMaster = null;
 
-	        for (int i = 0; i < curriculumList.size(); i++) {
-	          if (curriculumList.get(i).getIsMaster() == 1)
-	            prevMaster = curriculumList.get(i);
-	        }
-	        if (prevMaster != null) {
-	          prevMaster.setIsMaster(0);
-	          curriculumService.save(prevMaster);
-	        } else {
-	          LogManager.getRootLogger().error(prevMaster);
-	        }
-	      } catch (NullPointerException e) {
-	        LogManager.getRootLogger().error(e);
-	      }
-		
-		//save new master curriculum
+	/**
+	 * @author Jordan DeLong Carter Taylor (1712-Steve)
+	 * @param PathVariable: int cId
+	 *            that holds curriculumId
+	 * markCurricullumAsMaster: method that marks selected curriculum as master 
+	 * 			version (identified by id sent as request parameter), and sets 
+	 * 			previous master version to non-master status.
+	 * @return HttpStatus.BAD_REQUEST if missing parameter, HttpStatus.ACCEPTED if
+	 *         successful
+	 */
+	@GetMapping("makemaster/{cId}")
+	public ResponseEntity<?> markCurriculumAsMaster(@PathVariable int cId) {
+
+		Curriculum c = new Curriculum();
+
+		try {
+			c = curriculumService.getCuricullumByIdKeepPwd(cId);	
+		} catch (NullPointerException e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		// find the curriculum with same name and isMaster = 1; set to 0; save
+		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(c.getCurriculumName());
+
+		try {
+			Curriculum prevMaster = null;
+
+			for (int i = 0; i < curriculumList.size(); i++) {
+				if (curriculumList.get(i).getIsMaster() == 1)
+					prevMaster = curriculumList.get(i);
+			}
+			if (prevMaster != null) {
+				prevMaster.setIsMaster(0);
+				curriculumService.save(prevMaster);
+			} else {
+				LogManager.getRootLogger().error(prevMaster);
+			}
+		} catch (NullPointerException e) {
+			LogManager.getRootLogger().error(e);
+		}
+
+		// save new master curriculum
+		c.setIsMaster(1);
 		curriculumService.save(c);
-		
+
 		return new ResponseEntity<>(HttpStatus.ACCEPTED);
 	}
-	
+
 	/**
 	 * @author Carter Taylor (1712-Steve)
-	 * @param id - batch id given as path variable
-	 * syncBatch: sync batch by getting list of curriculum subtopics
-	 * 		related to that batch type
-	 * @return HttpStatus.RESET_CONTENT if successful, 
-	 * 		HttpStatus.NO_CONTENT if already synced
+	 * @param PathVariable int id
+	 *            batch id given as path variable 
+	 * syncBatch: sync batch by getting
+	 *            list of curriculum subtopics related to that batch type
+	 * @return HttpStatus.RESET_CONTENT if successful, HttpStatus.NO_CONTENT if
+	 *         already synced
 	 * @throws CustomException
 	 */
 	@GetMapping(value = "syncbatch/{id}")
@@ -319,10 +335,7 @@ public class CurriculumController {
 			}
 		}
 		//get all curriculumSubtopics associated with curriculum
-//		List<CurriculumSubtopic> subtopicList = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
-		
-//		List<CurriculumSubtopic> subtopicListMon = (List<CurriculumSubtopic>) subtopicList.stream().filter(sub -> sub.getCurriculumSubtopicDay() == 1);
-//		System.out.println(subtopicListMon);
+
 		List<CurriculumSubtopic> subtopicListMonday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 1);
 		List<CurriculumSubtopic> subtopicListTuesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 2);
 		List<CurriculumSubtopic> subtopicListWednesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 3);
@@ -352,7 +365,6 @@ public class CurriculumController {
 			    // nextInt is normally exclusive of the top value,
 			    // so add 1 to make it inclusive
 			    int randomNum = rand.nextInt((17 - 9) + 1) + 9;
-			    //System.out.println(randomNum);
 			    
 				Subtopic subtopic = new Subtopic();
 				
@@ -371,28 +383,19 @@ public class CurriculumController {
 				
 				int week = curriculumSubtopic.getCurriculumSubtopicWeek();
 				int absDay = (week-1)*7 + day - 1;
-				//System.out.println(absDay);
+				
 				cal.add(Calendar.DAY_OF_WEEK, absDay);
-				//System.out.println(cal.getTime());
 				
 				
 				subtopic.setSubtopicDate(new Timestamp(cal.getTime().getTime()));
-				//System.out.println(subtopic.getSubtopicName());
-				//subtopicRepository.save(subtopic);
 				subtopics.add(subtopic);
 			}	
 		});
 		
 		subtopicRepository.save(subtopics);
 		//logic goes here to add to calendar
-		//if(subtopicService.getNumberOfSubtopics(id) ==  0){
-		if(true){
-			System.out.println("made it inside conditional");
-//			batchService.addCurriculumSubtopicsToBatch(subtopicListMon, currBatch);
-//			batchService.addCurriculumSubtopicsToBatch(subtopicListTuesday, currBatch);
-//			batchService.addCurriculumSubtopicsToBatch(subtopicListWednesday, currBatch);
-//			batchService.addCurriculumSubtopicsToBatch(subtopicListThursday, currBatch);
-//			batchService.addCurriculumSubtopicsToBatch(subtopicListFriday, currBatch);
+		if(subtopicService.getNumberOfSubtopics(id) ==  0){
+//			batchService.addCurriculumSubtopicsToBatch(subtopicList, currBatch);
 		}else{
 			//throw new CustomException("Batch already synced");
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -400,4 +403,17 @@ public class CurriculumController {
 		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
 	}
 	
+	/**
+	 * @author Carter Taylor, James Holzer (1712-Steve)
+	 * @param RequestBody Curriculum version
+	 * deleteCurriculumVersion: Deletes a curriculum version along with it's related CurriculumSubtopics
+	 * @return HttpStatus.OK if successful
+	 */
+	@PostMapping("deleteversion")
+	public ResponseEntity<?> deleteCurriculumVersion(@RequestBody Curriculum version)
+	{
+		curriculumService.deleteCurriculum(version);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 }

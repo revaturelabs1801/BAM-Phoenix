@@ -1,24 +1,20 @@
 package com.revature.bam.controller;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
-
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.revature.bam.bean.BamUser;
 import com.revature.bam.bean.Batch;
 import com.revature.bam.service.BamUserService;
@@ -26,12 +22,10 @@ import com.revature.bam.service.BatchService;
 import com.revature.bam.service.PasswordGenerator;
 
 @RestController
-@RequestMapping(value = "users/")
+@RequestMapping("users/")
+@CrossOrigin
 public class UserController {
 	
-	private static final String USERID = "userId";
-	private static final String BATCHID = "batchId";
-
 	@Autowired
 	BamUserService userService;
 
@@ -45,7 +39,7 @@ public class UserController {
 	public ResponseEntity<List<BamUser>> getAllUsers() {
 		List<BamUser> allUsers = userService.findAllUsers();
 		
-		return new ResponseEntity<List<BamUser>>(allUsers, HttpStatus.ACCEPTED);
+		return new ResponseEntity<List<BamUser>>(allUsers, HttpStatus.OK);
 	}
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method gets all trainers
@@ -55,9 +49,8 @@ public class UserController {
 	public ResponseEntity<List<BamUser>> getAllTrainers() {
 		List<BamUser> allTrainers = userService.findByRole(2);
 		
-		return new ResponseEntity<List<BamUser>>(allTrainers, HttpStatus.ACCEPTED);
+		return new ResponseEntity<List<BamUser>>(allTrainers, HttpStatus.OK);
 	}
-
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method gets all associates
 	 * @return List<BamUser> : all associates
@@ -66,39 +59,35 @@ public class UserController {
 	public ResponseEntity<List<BamUser>> getAllAssociates() {
 		List<BamUser> allAssociates = userService.findByRole(1);
 		
-		return new ResponseEntity<List<BamUser>>(allAssociates, HttpStatus.ACCEPTED);
+		return new ResponseEntity<List<BamUser>>(allAssociates, HttpStatus.OK);
 	}
-
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method gets all users in batch
-	 * @param request
+	 * @param int BATCHID
 	 * @return List<BamUser> : users in batch
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	@GetMapping("inbatch")
-	public ResponseEntity<List<BamUser>> getUsersInBatch(HttpServletRequest request)throws IOException, ServletException {
-		//Get the batch id from the request
-		int batchId = Integer.parseInt( request.getParameter(BATCHID) );
+	@GetMapping("inbatch/{batchId}")
+	public ResponseEntity<List<BamUser>> getUsersInBatch(@PathVariable int batchId) {
 		
 		//Retrieve and return users in a batch from the database
 		List<BamUser> usersInBatch = userService.findUsersInBatch(batchId);
 		
-		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.ACCEPTED);
+		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.OK);
 	}
-
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
-	 * removes user from batch then returns user with updated batch
+	 * Removes user from batch then returns user with updated batch. 
+	 * "0" role does not exist in the database, when implemented this code will run.
 	 * 
-	 * @param request
+	 * @param int USERID
 	 * @return List<BamUser>: users from batch
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	@PostMapping("drop")
-	public ResponseEntity<List<BamUser>> dropUserFromBatch(HttpServletRequest request) throws IOException, ServletException{
-		//Get the user id from the request
-		int userId = Integer.parseInt( request.getParameter(USERID) );
+	@PostMapping("drop/{userId}")
+	public ResponseEntity<List<BamUser>> dropUserFromBatch(@PathVariable int userId) {
+		
 		BamUser user = userService.findUserById( userId );
 		int batchId = user.getBatch().getId();
 
@@ -110,9 +99,8 @@ public class UserController {
 		// Return users from batch without the user
 		List<BamUser> usersInBatch = userService.findUsersInBatch(batchId);
 		
-		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.ACCEPTED);
+		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.OK);
 	}
-
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Updates the current user
 	 * 
@@ -152,12 +140,10 @@ public class UserController {
 			return new ResponseEntity<BamUser>(addedUser, HttpStatus.BAD_REQUEST);
 		}
 	}
-
-
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method resets the password for the current user
 	 * 
-	 * @param userNewPass
+	 * @param BamUser userNewPass
 	 * @return BamUser
 	 */
 	@PostMapping("reset")
@@ -168,24 +154,22 @@ public class UserController {
 			String hashed =  BCrypt.hashpw(userNewPass.getPwd2(), BCrypt.gensalt());
 			currentUser.setPwd(hashed);
 			updatedUser = userService.addOrUpdateUser(currentUser);
-			return new ResponseEntity<BamUser>(updatedUser, HttpStatus.ACCEPTED);
+			return new ResponseEntity<BamUser>(updatedUser, HttpStatus.OK);
 		}else{
 			return new ResponseEntity<BamUser>(updatedUser, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method removes user and returns updated batch
 	 * 
-	 * @param request
+	 * @param int USERID
 	 * @return List<BamUser>
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	@PostMapping("remove")
-	public ResponseEntity<List<BamUser>> removeUser(HttpServletRequest request)throws IOException, ServletException{
-		//Get the user id from the request
-		int userId = Integer.parseInt( request.getParameter(USERID) );
+	@PostMapping("remove/{userId}")
+	public ResponseEntity<List<BamUser>> removeUser(@PathVariable int userId) {
+
 		BamUser user = userService.findUserById( userId );
 		int batchId = user.getBatch().getId();
 
@@ -197,24 +181,19 @@ public class UserController {
 		// Return users from batch without the user
 		List<BamUser> newBatchList = userService.findUsersInBatch(batchId);
 		if (newBatchList != null) {
-			return new ResponseEntity<List<BamUser>>(newBatchList, HttpStatus.ACCEPTED);
+			return new ResponseEntity<List<BamUser>>(newBatchList, HttpStatus.OK);
 		}else {
 			return new ResponseEntity<List<BamUser>>(newBatchList, HttpStatus.BAD_REQUEST);
 		}
 	}
-
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method adds users to the batch
 	 * 
-	 * @param request
+	 * @param int USERID, int BATCHID
 	 * @return List<BamUser>
 	 */
-	@PostMapping("add")
-	public ResponseEntity<List<BamUser>> addUserToBatch(HttpServletRequest request) {
-		//Get the user id from the request
-		int userId = Integer.parseInt( request.getParameter(USERID) );
-		//Get the batch to add the user to from the request
-		int batchId = Integer.parseInt( request.getParameter(BATCHID) );
+	@PostMapping("add/{userId}/{batchId}")
+	public ResponseEntity<List<BamUser>> addUserToBatch(@PathVariable int userId, @PathVariable int batchId) {
 		
 		BamUser user = userService.findUserById( userId );
 		user.setBatch(batchService.getBatchById(batchId));
@@ -222,22 +201,21 @@ public class UserController {
 		BamUser addedUser = userService.addOrUpdateUser(user);
 		
 		if (addedUser != null) {
-			return new ResponseEntity<List<BamUser>>(userService.findUsersNotInBatch(),HttpStatus.ACCEPTED);
+			return new ResponseEntity<List<BamUser>>(userService.findUsersNotInBatch(),HttpStatus.OK);
 		}else {
 			return new ResponseEntity<List<BamUser>>(userService.findUsersNotInBatch(),HttpStatus.BAD_REQUEST);
 		}
 	}
-
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method returns users not in batch
 	 * 
-	 * @param request
+	 * @param 
 	 * @return List<BamUser>
 	 */
 	@GetMapping("notinabatch")
-	public ResponseEntity<List<BamUser>> getUsersNotInBatch(HttpServletRequest request) {
+	public ResponseEntity<List<BamUser>> getUsersNotInBatch() {
 		List<BamUser> usersNotInBatch = userService.findUsersNotInBatch();
-		return new ResponseEntity<List<BamUser>>(usersNotInBatch, HttpStatus.ACCEPTED);
+		return new ResponseEntity<List<BamUser>>(usersNotInBatch, HttpStatus.OK);
 	}
 	/**@author Jeffrey Camacho 1712-dec10-java-Steve
 	 * Method resets the password
@@ -260,5 +238,4 @@ public class UserController {
         	return new ResponseEntity<BamUser>(user,HttpStatus.BAD_REQUEST);
         }
     }
-
 }
