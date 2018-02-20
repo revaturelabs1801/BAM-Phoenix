@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -99,91 +101,105 @@ public class SubtopicService {
 		return subtopicStatusRepository.findByName(name);
 	}
 
-	/**
-	 * Service method to return the number of Subtopics by matching their ids with
-	 * the batchId.
-	 * 
-	 * @param batchId(int)
-	 * @return number(long) of Subtopics
-	 * 
-	 * @author Michael Garza, Gary LaMountain
-	 */
-	public Long getNumberOfSubtopics(int batchId) {
-		return subtopicRepository.countSubtopicsByBatchId(batchId);
-	}
+  /**
+   * Service method to return the number of Subtopics by matching their ids with
+   * the batchId.
+   * 
+   * @param batchId(int)
+   * @return number(long) of Subtopics
+   * 
+   * @author Michael Garza, Gary LaMountain
+   */
+  public Long getNumberOfSubtopics(int batchId) {
+    return subtopicRepository.countSubtopicsByBatchId(batchId);
+  }
 
-	public List<SubtopicName> getAllSubtopics() {
-		return subtopicNameRepository.findAll();
-	}
+  public List<SubtopicName> getAllSubtopics() {
+    return subtopicNameRepository.findAll();
+  }
 
-	public List<Subtopic> getSubtopics() {
-		return subtopicRepository.findAll();
-	}
+  public List<Subtopic> getSubtopics() {
+    return subtopicRepository.findAll();
+  }
 
-	/**
-	 * Service method to return the pages of json information to the FullCalendar
-	 * API. This is hard coded until the FullCalendar API is set up for getting
-	 * pages of json sub-topics.
-	 * 
-	 * @param batchId
-	 * @param pageRequest
-	 * @return
-	 * 
-	 * 		Authors: Michael Garza Gary LaMountain
-	 */
-	public List<Subtopic> findByBatchId(int batchId, PageRequest pageRequest) {
-		return subtopicRepository.findByBatch(batchRepository.findById(batchId), pageRequest);
-	}
+  /**
+   * Service method to return the pages of json information to the FullCalendar
+   * API.
+   * This is hard coded until the FullCalendar API is set up for getting pages
+   * of
+   * json sub-topics.
+   * 
+   * @param batchId
+   * @param pageRequest
+   * @return
+   * 
+   *         Authors: Michael Garza
+   *         Gary LaMountain
+   */
+  public List<Subtopic> findByBatchId(int batchId, PageRequest pageRequest) {
+    return subtopicRepository.findByBatch(batchRepository.findById(batchId), pageRequest);
+  }
 
-	/**
-	 * 
-	 * @param String
-	 *            name
-	 * @return SubtopicName
-	 */
-	public SubtopicName getSubtopicName(String name) {
-		return subtopicNameRepository.findByName(name);
-	}
+  /**
+   * 
+   * @param String
+   *          name
+   * @return SubtopicName
+   */
+  public SubtopicName getSubtopicName(String name) {
+    return subtopicNameRepository.findByName(name);
+  }
 
-	/**
-	 * 
-	 * @param int
-	 *            type
-	 * @return SubtopicType
-	 */
-	public SubtopicType getSubtopicType(int type) {
-		return subtopicTypeRepository.findById(type);
-	}
+  /**
+   * 
+   * @param int
+   *          type
+   * @return SubtopicType
+   */
+  public SubtopicType getSubtopicType(int type) {
+    return subtopicTypeRepository.findById(type);
+  }
 
-	/**
-	 * 
-	 * @param SubtopicName
-	 *            subtopicName
-	 * @author Brian McKalip
-	 */
-	public SubtopicName addOrUpdateSubtopicName(SubtopicName subtopicName) {
-		return subtopicNameRepository.save(subtopicName);
-	}
+  /**
+   * 
+   * @param SubtopicName
+   *          subtopicName
+   * @author Brian McKalip
+   */
+  public SubtopicName addOrUpdateSubtopicName(SubtopicName subtopicName) {
+    return subtopicNameRepository.save(subtopicName);
+  }
+  
+   /**
+   * Service to remove subtopic belonging to a batch.
+   * If exception then return false.
+   * @param subtopicId
+   * @return boolean
+   * 
+   * @author Sean Sung | (1712-dec10-java-Steve)
+   */
+  public boolean removeSubtopicFromBatch(int subtopicId) {
+	  try {
+	  	  subtopicRepository.delete(subtopicId);
+		  return true;
+	  } catch(IllegalArgumentException e) {
+		  return false;
+	  } 
+  }
+  
+  @Transactional
+  public boolean removeAllSubtopicsFromBatch(int batchId) {
+	  try {
+		  Batch batch = new Batch();
+		  batch.setId(batchId);
+		  subtopicRepository.deleteByBatch(batch);
+		  return true;
+	  } catch(IllegalArgumentException e) {
+		  return false;
+	  } 
+  }
 
-	/**
-	 * Service to remove subtopic belonging to a batch. If exception then return
-	 * false.
-	 * 
-	 * @param subtopicId
-	 * @return boolean
-	 * 
-	 * @author Sean Sung | (1712-dec10-java-Steve)
-	 */
-	public boolean removeSubtopicFromBatch(int subtopicId) {
-		try {
-			subtopicRepository.delete(subtopicId);
-			return true;
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
-	}
-
-	public Subtopic updateSubtopicStatus(Subtopic subtopic) {
+  	public Subtopic updateSubtopicStatus(Subtopic subtopic) {
 		return subtopicRepository.save(subtopic);
 	}
 

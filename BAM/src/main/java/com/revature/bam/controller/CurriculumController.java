@@ -38,7 +38,6 @@ import com.revature.bam.service.CurriculumService;
 import com.revature.bam.service.CurriculumSubtopicService;
 import com.revature.bam.service.SubtopicService;
 
-// import ch.qos.logback.core.net.SyslogOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController

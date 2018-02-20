@@ -98,4 +98,14 @@ public class SubTopicController {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 	}
+	
+	@PostMapping("removebybatch/{batchId}")
+	public ResponseEntity<?> removeSubtopicByBatch(@PathVariable int batchId) {
+		if(subTopicService.removeAllSubtopicsFromBatch(batchId)) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 }
