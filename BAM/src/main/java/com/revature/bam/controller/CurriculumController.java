@@ -38,6 +38,7 @@ import com.revature.bam.service.CurriculumService;
 import com.revature.bam.service.CurriculumSubtopicService;
 import com.revature.bam.service.SubtopicService;
 
+// import ch.qos.logback.core.net.SyslogOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
@@ -392,12 +393,9 @@ public class CurriculumController {
 		});
 		
 		List<Subtopic> persistedSubtopics = subtopicRepository.save(subtopics);
-	
 		if(persistedSubtopics.isEmpty()){
-			
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else{
-			
 			return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
 		}
 		

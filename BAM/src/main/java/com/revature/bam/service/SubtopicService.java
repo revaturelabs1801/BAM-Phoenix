@@ -202,7 +202,13 @@ public class SubtopicService {
   	public Subtopic updateSubtopicStatus(Subtopic subtopic) {
 		return subtopicRepository.save(subtopic);
 	}
-
+  	
+  	/**
+  	 * Returns a subtopic for a batch
+  	 * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
+  	 * @param batchId
+  	 * @return List<Subtopic>
+  	 */
 	public List<Subtopic> findTop1ByBatchId(int batchId){
 		return subtopicRepository.findTop1ByBatchId(batchId);
 	}

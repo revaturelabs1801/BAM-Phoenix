@@ -86,9 +86,9 @@ public class SubTopicController {
 	}
 
 	/**
-	 * 
+	 * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
 	 * @param batchId
-	 * @return
+	 * @return HttpStatus - status NO_CONTENT 204 if no subtopis found. - status OK 200 if subtopic exists in batch.
 	 */
 	@GetMapping("ispopulated/{batchId}")
 	public ResponseEntity<?> isPopulated(@PathVariable int batchId) {
