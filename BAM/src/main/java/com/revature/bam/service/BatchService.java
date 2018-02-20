@@ -2,7 +2,9 @@ package com.revature.bam.service;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,8 @@ public class BatchService {
 	public void addCurriculumSubtopicsToBatch(List<CurriculumSubtopic> currSubtopics, Batch batch){
 		Calendar cal = Calendar.getInstance();
 		
+	    Random rand = new Random();
+
 		for(CurriculumSubtopic cSTopic: currSubtopics){
 			Subtopic sub = new Subtopic();
 			
@@ -80,15 +84,26 @@ public class BatchService {
 			int sDay = cSTopic.getCurriculumSubtopicDay();
 			int sWeek = cSTopic.getCurriculumSubtopicWeek();
 			int absoluteDayOfBatch = (sWeek-1)*7 + sDay - 1;
-			
+
 			//Set the subtopics date using the batches start date and the 
 			//previously derived absolute day of batch.
 			cal.setTime(batch.getStartDate());
 			cal.add(Calendar.DAY_OF_WEEK, absoluteDayOfBatch);
-			sub.setSubtopicDate(new Timestamp(cal.getTime().getTime()));
 			
-			subtopicRepository.save(sub);
+			//get a random number from 9-17 inclusive
+		    int randomNum = rand.nextInt((17 - 9) + 1) + 9;
+
+		    //set a random time from 9:00 am EST - 4:00 pm EST
+		    cal.set(Calendar.HOUR_OF_DAY, randomNum);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			
+			Timestamp t = new Timestamp(cal.getTime().getTime());
+			sub.setSubtopicDate(t);
+			
 		}
+		
 	}
 	
 	/**

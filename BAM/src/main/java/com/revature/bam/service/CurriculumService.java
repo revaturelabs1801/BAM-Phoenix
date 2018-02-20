@@ -58,7 +58,13 @@ public class CurriculumService {
 	}
 	
 	public List<Curriculum> findAllCurriculumByName(String name){
+		
 		return curriculumRepository.findByCurriculumName(name);
+	}
+	
+	public List<Curriculum> findAllCurriculumByNameAndIsMaster(String name, Integer isMaster){
+		List<Curriculum> master = curriculumRepository.findByCurriculumNameAndIsMaster(name, isMaster);
+		return master;
 	}
 
 	/**
