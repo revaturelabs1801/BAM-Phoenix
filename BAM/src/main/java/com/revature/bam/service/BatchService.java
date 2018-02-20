@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,12 +73,13 @@ public class BatchService {
 		
 	
 		
-		int prevSubtopicIndex = 0;
-		int currentSubtopicIndex = 0;
-		
-		int defaultStartTimeHour= 9;
-		int currentStartTimeHour= 9;
-		
+//		int prevSubtopicIndex = 0;
+//		int currentSubtopicIndex = 0;
+//		
+//		int defaultStartTimeHour= 9;
+//		int currentStartTimeHour= 9;
+	    Random rand = new Random();
+
 		for(CurriculumSubtopic cSTopic: currSubtopics){
 			Subtopic sub = new Subtopic();
 			
@@ -97,26 +99,11 @@ public class BatchService {
 			cal.setTime(batch.getStartDate());
 			cal.add(Calendar.DAY_OF_WEEK, absoluteDayOfBatch);
 			
-			if(currentSubtopicIndex == 0)
-			{
-				cal.set(Calendar.HOUR_OF_DAY, defaultStartTimeHour);
-			}
-			else
-			{
-				CurriculumSubtopic prev = currSubtopics.get(prevSubtopicIndex);
-				CurriculumSubtopic current = currSubtopics.get(currentSubtopicIndex);
-				//System.out.println("prev: " + prev.getCurriculumSubtopicWeek() + " " + prev.getCurriculumSubtopicDay());
-				//System.out.println("curr: " + current.getCurriculumSubtopicWeek() + " " + current.getCurriculumSubtopicDay());
-				if(prev.getCurriculumSubtopicWeek() == current.getCurriculumSubtopicWeek() && prev.getCurriculumSubtopicDay() == current.getCurriculumSubtopicDay()){
-					currentStartTimeHour = (currentStartTimeHour + 1) % 22;
-					cal.set(Calendar.HOUR_OF_DAY, currentStartTimeHour);
-				}
-				else
-				{
-					currentStartTimeHour = defaultStartTimeHour;
-					cal.set(Calendar.HOUR_OF_DAY, defaultStartTimeHour);
-				}
-			}
+			//get a random number from 9-17 inclusive
+		    int randomNum = rand.nextInt((17 - 9) + 1) + 9;
+
+		    //set a random time from 9:00 am EST - 4:00 pm EST
+		    cal.set(Calendar.HOUR_OF_DAY, randomNum);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
@@ -125,8 +112,9 @@ public class BatchService {
 			//System.out.println(new Date(t.getTime()));
 			sub.setSubtopicDate(t);
 			
-			prevSubtopicIndex = currentSubtopicIndex;
-			currentSubtopicIndex++;
+//			prevSubtopicIndex = currentSubtopicIndex;
+//			currentSubtopicIndex++;
+			
 			//System.out.println(sub.getSubtopicDate());
 			//subtopicRepository.save(sub);
 		}

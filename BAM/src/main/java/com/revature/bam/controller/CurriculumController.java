@@ -1,8 +1,13 @@
 package com.revature.bam.controller;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,15 +31,18 @@ import com.revature.bam.bean.Curriculum;
 import com.revature.bam.bean.CurriculumSubtopic;
 import com.revature.bam.bean.Subtopic;
 import com.revature.bam.bean.SubtopicName;
+import com.revature.bam.bean.SubtopicStatus;
 import com.revature.bam.dto.CurriculumSubtopicDTO;
 import com.revature.bam.dto.DaysDTO;
 import com.revature.bam.exception.CustomException;
+import com.revature.bam.repository.SubtopicRepository;
 import com.revature.bam.service.BatchService;
 import com.revature.bam.service.CurriculumService;
 import com.revature.bam.service.CurriculumSubtopicService;
 import com.revature.bam.service.SubtopicService;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping(value = "curriculum/")
@@ -49,6 +57,9 @@ public class CurriculumController {
 	
 	@Autowired
 	SubtopicService subtopicService;
+	
+	@Autowired
+	SubtopicRepository subtopicRepository;
 	
 	@Autowired 
 	BatchService batchService;
@@ -308,44 +319,73 @@ public class CurriculumController {
 			}
 		}
 		//get all curriculumSubtopics associated with curriculum
-		List<CurriculumSubtopic> subtopicList = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
+//		List<CurriculumSubtopic> subtopicList = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
 		
 //		List<CurriculumSubtopic> subtopicListMon = (List<CurriculumSubtopic>) subtopicList.stream().filter(sub -> sub.getCurriculumSubtopicDay() == 1);
 //		System.out.println(subtopicListMon);
-//		List<CurriculumSubtopic> subtopicListMonday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 1);
-//		List<CurriculumSubtopic> subtopicListTuesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 2);
-//		List<CurriculumSubtopic> subtopicListWednesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 3);
-//		List<CurriculumSubtopic> subtopicListThursday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 4);
-//		List<CurriculumSubtopic> subtopicListFriday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 5);
-		//System.out.println(subtopicList);
+		List<CurriculumSubtopic> subtopicListMonday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 1);
+		List<CurriculumSubtopic> subtopicListTuesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 2);
+		List<CurriculumSubtopic> subtopicListWednesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 3);
+		List<CurriculumSubtopic> subtopicListThursday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 4);
+		List<CurriculumSubtopic> subtopicListFriday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 5);
 		
-		List<CurriculumSubtopic> subtopicListMon = new ArrayList<>();
-		List<CurriculumSubtopic> subtopicListTues = new ArrayList<>();
-		for(CurriculumSubtopic cs: subtopicList)
-		{
-			//System.out.println(cs.getCurriculumSubtopicWeek() + "  " + cs.getCurriculumSubtopicDay());
-			if(cs.getCurriculumSubtopicDay() == 1)
-			{
-				CurriculumSubtopic monSubtopic = new CurriculumSubtopic();
-				monSubtopic.setCurriculumSubtopicNameId(cs.getCurriculumSubtopicNameId());
-				monSubtopic.setCurriculumSubtopicWeek(cs.getCurriculumSubtopicWeek());
-				monSubtopic.setCurriculumSubtopicDay(1);
-				subtopicListMon.add(monSubtopic);
-			}
-			else if(cs.getCurriculumSubtopicDay() == 2)
-			{
-				CurriculumSubtopic tuesSubtopic = new CurriculumSubtopic();
-				tuesSubtopic.setCurriculumSubtopicNameId(cs.getCurriculumSubtopicNameId());
-				tuesSubtopic.setCurriculumSubtopicWeek(cs.getCurriculumSubtopicWeek());
-				tuesSubtopic.setCurriculumSubtopicDay(1);
-				subtopicListTues.add(tuesSubtopic);
-			}
-		}
-		System.out.println(subtopicListMon);
-		System.out.println(subtopicListTues);
-		System.out.println("this takes forever");
+		Map<Integer, List<CurriculumSubtopic>> map = new ConcurrentHashMap<Integer, List<CurriculumSubtopic>>();
+		
+		map.put(1, subtopicListMonday);
+		map.put(2, subtopicListTuesday);
+		map.put(3, subtopicListWednesday);
+		map.put(4, subtopicListThursday);
+		map.put(5, subtopicListFriday);
+		
+		SubtopicStatus subStatus = subtopicService.getStatus("Pending");
+		ArrayList<Subtopic> subtopics = new ArrayList<>();
+		
+		map.forEach((day, weeks) -> {
+			//System.out.println("day " + day + " contains weeks " + weeks);
+			
+			Calendar cal = Calendar.getInstance();
+
+		    Random rand = new Random(System.currentTimeMillis());
+		    
+			for(CurriculumSubtopic curriculumSubtopic: weeks){
+				
+			    // nextInt is normally exclusive of the top value,
+			    // so add 1 to make it inclusive
+			    int randomNum = rand.nextInt((17 - 9) + 1) + 9;
+			    //System.out.println(randomNum);
+			    
+				Subtopic subtopic = new Subtopic();
+				
+				
+				subtopic.setBatch(currBatch);
+				subtopic.setSubtopicName(curriculumSubtopic.getCurriculumSubtopicNameId());
+				subtopic.setStatus(subStatus);
+				
+				
+				cal.setTime(currBatch.getStartDate());
+				
+				cal.set(Calendar.HOUR_OF_DAY, randomNum);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				
+				int week = curriculumSubtopic.getCurriculumSubtopicWeek();
+				int absDay = (week-1)*7 + day - 1;
+				//System.out.println(absDay);
+				cal.add(Calendar.DAY_OF_WEEK, absDay);
+				//System.out.println(cal.getTime());
+				
+				
+				subtopic.setSubtopicDate(new Timestamp(cal.getTime().getTime()));
+				//System.out.println(subtopic.getSubtopicName());
+				//subtopicRepository.save(subtopic);
+				subtopics.add(subtopic);
+			}	
+		});
+		
+		subtopicRepository.save(subtopics);
 		//logic goes here to add to calendar
-		//if(subtopicService.getNumberOfSubtopics(id) !=  0){
+		//if(subtopicService.getNumberOfSubtopics(id) ==  0){
 		if(true){
 			System.out.println("made it inside conditional");
 //			batchService.addCurriculumSubtopicsToBatch(subtopicListMon, currBatch);
