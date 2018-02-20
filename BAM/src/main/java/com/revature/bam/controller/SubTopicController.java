@@ -35,16 +35,7 @@ public class SubTopicController {
  * 			- status of 201 CREATED if a Subtopic is created or updated.
  * 			- status of 204 NO_CONTENT is a Subtopic is not created.
  */
-<<<<<<< HEAD
 
-
-=======
-//
-//	@GetMapping("/{id}")
-//	public Subtopic getSubtopic(@PathVariable int id){
-//		return subTopicService.getSubtopic(id);
-//	}
->>>>>>> f025c6f27980d24fff9174fdee2ce3ceffe22e98
 	
 	@PostMapping("/updatestatus")
 	public ResponseEntity<Subtopic> updateSubtopicStatus(@RequestBody Subtopic subtopic){
