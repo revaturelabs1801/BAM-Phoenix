@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+// import ch.qos.logback.core.net.SyslogOutputStream;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,6 @@ import com.revature.bam.service.CurriculumService;
 import com.revature.bam.service.CurriculumSubtopicService;
 import com.revature.bam.service.SubtopicService;
 
-// import ch.qos.logback.core.net.SyslogOutputStream;
-import java.util.concurrent.ConcurrentHashMap;
-
 @RestController
 @RequestMapping("curriculum/")
 @CrossOrigin
@@ -54,9 +52,6 @@ public class CurriculumController {
 
 	@Autowired
 	SubtopicService subtopicService;
-	
-	@Autowired
-	SubtopicRepository subtopicRepository;
 	
 	@Autowired 
 	BatchService batchService;
@@ -392,7 +387,7 @@ public class CurriculumController {
 			}	
 		});
 		
-		List<Subtopic> persistedSubtopics = subtopicRepository.save(subtopics);
+		List<Subtopic> persistedSubtopics = subtopicService.saveSubtopics(subtopics);
 		if(persistedSubtopics.isEmpty()){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else{

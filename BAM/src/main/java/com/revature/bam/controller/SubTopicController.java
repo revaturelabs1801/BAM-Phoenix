@@ -86,9 +86,10 @@ public class SubTopicController {
 	}
 
 	/**
+	 * Checks whether the given batch has any subtopics in its calendar
 	 * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
 	 * @param batchId
-	 * @return HttpStatus - status NO_CONTENT 204 if no subtopis found. - status OK 200 if subtopic exists in batch.
+	 * @return HttpStatus - status NO_CONTENT 204 if no subtopics found. - status OK 200 if at least one subtopic exists in batch.
 	 */
 	@GetMapping("ispopulated/{batchId}")
 	public ResponseEntity<?> isPopulated(@PathVariable int batchId) {
@@ -99,6 +100,12 @@ public class SubTopicController {
 		}
 	}
 	
+	/**
+	 * Removes all subtopics from the calendar of the batch with id [batchId]
+	 * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
+	 * @param batchId
+	 * @return HttpStatus - status NO_CONTENT if successful, status INTERNAL_SERVER_ERROR otherwise
+	 */
 	@PostMapping("removebybatch/{batchId}")
 	public ResponseEntity<?> removeSubtopicByBatch(@PathVariable int batchId) {
 		if(subTopicService.removeAllSubtopicsFromBatch(batchId)) {

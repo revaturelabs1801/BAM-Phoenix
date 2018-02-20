@@ -187,6 +187,12 @@ public class SubtopicService {
 	  } 
   }
   
+  /**
+   * Removes all subtopics from the given batch's calendar
+   * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
+   * @param batchId
+   * @return True if subtopics are successfully removed, false otherwise
+   */
   @Transactional
   public boolean removeAllSubtopicsFromBatch(int batchId) {
 	  try {
@@ -204,12 +210,16 @@ public class SubtopicService {
 	}
   	
   	/**
-  	 * Returns a subtopic for a batch
+  	 * Returns a single subtopic for a batch, if any exist
   	 * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
   	 * @param batchId
   	 * @return List<Subtopic>
   	 */
 	public List<Subtopic> findTop1ByBatchId(int batchId){
 		return subtopicRepository.findTop1ByBatchId(batchId);
+	}
+	
+	public List<Subtopic> saveSubtopics(List<Subtopic> subtopics) {
+		return subtopicRepository.save(subtopics);
 	}
 }
