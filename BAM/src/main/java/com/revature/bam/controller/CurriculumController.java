@@ -287,7 +287,7 @@ public class CurriculumController {
 	 *         already synced
 	 * @throws CustomException
 	 */
-	@GetMapping(value = "syncbatch/{id}")
+	@GetMapping("syncbatch/{id}")
 	public ResponseEntity<?> syncBatch(@PathVariable int id) throws CustomException{
 		Batch currBatch = batchService.getBatchById(id);
 		String batchType = currBatch.getType().getName();
