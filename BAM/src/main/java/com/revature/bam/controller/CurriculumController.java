@@ -38,7 +38,7 @@ import com.revature.bam.service.CurriculumService;
 import com.revature.bam.service.CurriculumSubtopicService;
 import com.revature.bam.service.SubtopicService;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+// import ch.qos.logback.core.net.SyslogOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
@@ -392,17 +392,17 @@ public class CurriculumController {
 			}	
 		});
 		
-		subtopicRepository.save(subtopics);
-		//logic goes here to add to calendar
-		if(subtopicService.getNumberOfSubtopics(id) ==  0){
-//			batchService.addCurriculumSubtopicsToBatch(subtopicList, currBatch);
-		}else{
-			//throw new CustomException("Batch already synced");
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
-	}
+		List<Subtopic> persistedSubtopics = subtopicRepository.save(subtopics);
 	
+		if(persistedSubtopics.isEmpty()){
+			
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}else{
+			
+			return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+		}
+		
+	}
 	/**
 	 * @author Carter Taylor, James Holzer (1712-Steve)
 	 * @param RequestBody Curriculum version

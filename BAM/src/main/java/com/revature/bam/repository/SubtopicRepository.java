@@ -38,4 +38,11 @@ public interface SubtopicRepository extends JpaRepository<Subtopic, Integer> {
 	 * @author  Michael Garza, Gary LaMountain
 	 */
 	List<Subtopic> findByBatch(Batch batch, Pageable pageable);
+	
+	/**
+	 * Finds one subtopic in the batch
+	 * @param batchId
+	 * @return
+	 */
+	List<Subtopic> findTop1ByBatchId(int batchId);
 }
