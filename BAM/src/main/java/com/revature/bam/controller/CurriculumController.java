@@ -349,7 +349,7 @@ public class CurriculumController {
 				
 			    // nextInt is normally exclusive of the top value,
 			    // so add 1 to make it inclusive
-			    int randomNum = rand.nextInt((17 - 9) + 1) + 9;
+			    int randomNum = rand.nextInt((11 - 9) + 1) + 9;
 			    
 				Subtopic subtopic = new Subtopic();
 				
