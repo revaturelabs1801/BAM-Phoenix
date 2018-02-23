@@ -1,5 +1,7 @@
 package com.revature.bam.bean;
 
+import com.revature.bam.logging.JSONify;
+
 public class AssignForceCurriculum {
 	
 	private Integer currId;
@@ -34,7 +36,12 @@ public class AssignForceCurriculum {
 
 	@Override
 	public String toString() {
-		return "AssignForceCurriculum [currId=" + currId + ", name=" + name + "]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("AssignForceCurriculum") + ":{";
+		json += jsonify.addKey("assignForceCurriculumName") + jsonify.addValue(name);
+		json += jsonify.addKey("assignForceCurriculumID") + jsonify.addEndValue(currId.toString());
+		json += "}}";
+		return json;
 	}
 	
 

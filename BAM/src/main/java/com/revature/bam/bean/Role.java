@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
+
+import com.revature.bam.logging.JSONify;
 /**
  * 
  * @author Duncan Hayward
@@ -60,7 +62,12 @@ public class Role {
 
 	@Override
 	public String toString() {
-		return "Role [roleId=" + roleId + ", userRole=" + userRole + "]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("Role") + ":{";
+		json += jsonify.addKey("roleID") + jsonify.addValue(String.valueOf(roleId));
+		json += jsonify.addKey("roleType") + jsonify.addEndValue(userRole);
+		json += "}}";
+		return json;
 	}
 	
 	

@@ -1,7 +1,14 @@
 package com.revature.bam.controller;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+// import ch.qos.logback.core.net.SyslogOutputStream;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -23,9 +29,11 @@ import com.revature.bam.bean.Curriculum;
 import com.revature.bam.bean.CurriculumSubtopic;
 import com.revature.bam.bean.Subtopic;
 import com.revature.bam.bean.SubtopicName;
+import com.revature.bam.bean.SubtopicStatus;
 import com.revature.bam.dto.CurriculumSubtopicDTO;
 import com.revature.bam.dto.DaysDTO;
 import com.revature.bam.exception.CustomException;
+import com.revature.bam.repository.SubtopicRepository;
 import com.revature.bam.service.BatchService;
 import com.revature.bam.service.CurriculumService;
 import com.revature.bam.service.CurriculumSubtopicService;
@@ -44,8 +52,8 @@ public class CurriculumController {
 
 	@Autowired
 	SubtopicService subtopicService;
-
-	@Autowired
+	
+	@Autowired 
 	BatchService batchService;
 
 	public CurriculumService get() {
@@ -168,12 +176,12 @@ public class CurriculumController {
 	 * addSchedule: method that takes a curriculum subtopic (schedule) as input from
 	 *            request body and saves both curriculum and curriculum subtopic. Handles case 
 	 *            of incoming curriculum being marked as master version. 
-	 * @return HttpStatus.CREATED if successful
+	 * @return Curriculum, HttpStatus.CREATED if successful
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
 	@PostMapping("addcurriculum")
-	public ResponseEntity<?> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
+	public ResponseEntity<Curriculum> addSchedule(@RequestBody String json) throws JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumSubtopicDTO c = mapper.readValue(json, CurriculumSubtopicDTO.class);
 
@@ -201,7 +209,7 @@ public class CurriculumController {
 			}
 		}
 		
-		curriculumService.save(curriculum);
+		Curriculum addedCurr = curriculumService.save(curriculum);
 
 		int numWeeks = c.getWeeks().length;
 		for (int i = 0; i < numWeeks; i++) {
@@ -218,11 +226,11 @@ public class CurriculumController {
 				}
 			}
 		}
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<Curriculum>(addedCurr, HttpStatus.CREATED);
 	}
 
 	/**
-	 * @author Carter Taylor (1712-Steve)
+	 * @author Jordan DeLong Carter Taylor (1712-Steve)
 	 * @param PathVariable: int cId
 	 *            that holds curriculumId
 	 * markCurricullumAsMaster: method that marks selected curriculum as master 
@@ -280,45 +288,111 @@ public class CurriculumController {
 	 * @throws CustomException
 	 */
 	@GetMapping("syncbatch/{id}")
-	public ResponseEntity<?> syncBatch(@PathVariable int id) throws CustomException {
+	public ResponseEntity<?> syncBatch(@PathVariable int id) throws CustomException{
 		Batch currBatch = batchService.getBatchById(id);
 		String batchType = currBatch.getType().getName();
+		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByNameAndIsMaster(batchType,1);
 
-		// get curriculums with same batchTypes
-		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(batchType);
-
-		// find the master curriculum; otherwise find one with most up to date version
+		//get master version
 		Curriculum c = null;
-		for (int i = 0; i < curriculumList.size(); i++) {
-			// master version found
-			if (curriculumList.get(i).getIsMaster() == 1)
+		for(int i = 0;  i < curriculumList.size(); i++){
+			//master version found
+			if(curriculumList.get(i).getIsMaster() == 1){
 				c = curriculumList.get(i);
-		}
-
-		// if master not found, get latest version
-		if (c == null) {
-			int min = curriculumList.get(0).getCurriculumVersion();
-			Curriculum tempCurric = curriculumList.get(0);
-			for (int i = 1; i < curriculumList.size(); i++) {
-				if (curriculumList.get(i).getCurriculumVersion() > min) {
-					min = curriculumList.get(i).getCurriculumVersion();
-					tempCurric = curriculumList.get(i);
-				}
 			}
-			c = tempCurric;
 		}
+		
+		//if master not found, get latest version
+		if(c == null){
+			System.out.println("you made it to find latest version");
+			curriculumList = curriculumService.findAllCurriculumByName(batchType);
+			if(curriculumList != null){
+				int min = curriculumList.get(0).getCurriculumVersion();
+				Curriculum tempCurric = curriculumList.get(0);
+				for(int i = 1; i < curriculumList.size(); i++){
+					if(curriculumList.get(i).getCurriculumVersion() > min){
+						min = curriculumList.get(i).getCurriculumVersion();
+						tempCurric = curriculumList.get(i);
+					}
+				}
+				c = tempCurric;
+			}
+			else{
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
+			}
+		}
+		//get all curriculumSubtopics associated with curriculum
 
-		// get all curriculumSubtopics associated with curriculum
-		List<CurriculumSubtopic> subtopicList = curriculumSubtopicService.getCurriculumSubtopicForCurriculum(c);
+		List<CurriculumSubtopic> subtopicListMonday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 1);
+		List<CurriculumSubtopic> subtopicListTuesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 2);
+		List<CurriculumSubtopic> subtopicListWednesday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 3);
+		List<CurriculumSubtopic> subtopicListThursday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 4);
+		List<CurriculumSubtopic> subtopicListFriday = curriculumSubtopicService.getCurriculumSubtopicsForDay(c, 5);
+		
+		Map<Integer, List<CurriculumSubtopic>> map = new ConcurrentHashMap<Integer, List<CurriculumSubtopic>>();
+		
+		map.put(1, subtopicListMonday);
+		map.put(2, subtopicListTuesday);
+		map.put(3, subtopicListWednesday);
+		map.put(4, subtopicListThursday);
+		map.put(5, subtopicListFriday);
+		
+		SubtopicStatus subStatus = subtopicService.getStatus("Pending");
+		ArrayList<Subtopic> subtopics = new ArrayList<>();
+		
+		map.forEach((day, weeks) -> {
+			Calendar cal = Calendar.getInstance();
 
-		// logic goes here to add to calendar
-		if (subtopicService.getNumberOfSubtopics(id) == 0) {
-			batchService.addCurriculumSubtopicsToBatch(subtopicList, currBatch);
-		} else {
-			// throw new CustomException("Batch already synced");
+		    Random rand = new Random(System.currentTimeMillis());
+		    
+			for(CurriculumSubtopic curriculumSubtopic: weeks){
+				
+			    // nextInt is normally exclusive of the top value,
+			    // so add 1 to make it inclusive
+			    int randomNum = rand.nextInt((11 - 9) + 1) + 9;
+			    
+				Subtopic subtopic = new Subtopic();
+				
+				subtopic.setBatch(currBatch);
+				subtopic.setSubtopicName(curriculumSubtopic.getCurriculumSubtopicNameId());
+				subtopic.setStatus(subStatus);
+				
+				cal.setTime(currBatch.getStartDate());
+				
+				cal.set(Calendar.HOUR_OF_DAY, randomNum);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				
+				int week = curriculumSubtopic.getCurriculumSubtopicWeek();
+				int absDay = (week-1)*7 + day - 1;
+				
+				cal.add(Calendar.DAY_OF_WEEK, absDay);
+				
+				subtopic.setSubtopicDate(new Timestamp(cal.getTime().getTime()));
+				subtopics.add(subtopic);
+			}	
+		});
+		
+		List<Subtopic> persistedSubtopics = subtopicService.saveSubtopics(subtopics);
+		if(persistedSubtopics.isEmpty()){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}else{
+			return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
 		}
-		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+		
+	}
+	/**
+	 * @author Carter Taylor, James Holzer (1712-Steve)
+	 * @param RequestBody Curriculum version
+	 * deleteCurriculumVersion: Deletes a curriculum version along with it's related CurriculumSubtopics
+	 * @return HttpStatus.OK if successful
+	 */
+	@PostMapping("deleteversion")
+	public ResponseEntity<?> deleteCurriculumVersion(@RequestBody Curriculum version)
+	{
+		curriculumService.deleteCurriculum(version);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

@@ -38,7 +38,7 @@ public class AssignForceSyncService {
 	static ResponseEntity<List<AssignForceBatch>> batches = restTemplate.exchange(baseUrl + "batch/",HttpMethod.GET,null, new ParameterizedTypeReference<List<AssignForceBatch>>(){});
 	
 	public void assignForceSync() {
-		
+
 		// Object to hold data from AssignForce
 		AssignForceBatch batch;
 		
@@ -91,7 +91,7 @@ public class AssignForceSyncService {
 				// Batch is persisted, the batch will only be added if it doesn't already exist in db
 				if(bservice.getBatchById(currentBatch.getId()) == null){
 					bservice.addOrUpdateBatch(currentBatch);	
-				}
+				} 
 			}
 		}
 	}

@@ -2,6 +2,8 @@ package com.revature.bam.bean;
 
 import org.springframework.stereotype.Component;
 
+import com.revature.bam.logging.JSONify;
+
 @Component
 public class AssignForceTrainer {
 
@@ -47,7 +49,13 @@ public class AssignForceTrainer {
 
 	@Override
 	public String toString() {
-		return "AssignForceTrainer [trainerId=" + trainerId + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("AssignForceTrainer") + ":{";
+		json += jsonify.addKey("assignForceTrainerFirstName") + jsonify.addValue(firstName);
+		json += jsonify.addKey("assignForceTrainerLastName") + jsonify.addValue(lastName);
+		json += jsonify.addKey("assignForceTrainerID") + jsonify.addEndValue(trainerId.toString());
+		json += "}}";
+		return json;
 	}
 
 }

@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -22,52 +24,52 @@ import com.revature.bam.repository.SubtopicNameRepository;
 import com.revature.bam.repository.SubtopicRepository;
 import com.revature.bam.repository.SubtopicStatusRepository;
 import com.revature.bam.repository.SubtopicTypeRepository;
- 
+
 @Service
 public class SubtopicService {
 
-  @Autowired
-  SubtopicRepository subtopicRepository;
+	@Autowired
+	SubtopicRepository subtopicRepository;
 
-  @Autowired
-  BatchRepository batchRepository;
+	@Autowired
+	BatchRepository batchRepository;
 
-  @Autowired
-  SubtopicNameRepository subtopicNameRepository;
+	@Autowired
+	SubtopicNameRepository subtopicNameRepository;
 
-  @Autowired
-  SubtopicStatusRepository subtopicStatusRepository;
+	@Autowired
+	SubtopicStatusRepository subtopicStatusRepository;
 
-  @Autowired
-  SubtopicTypeRepository subtopicTypeRepository;
+	@Autowired
+	SubtopicTypeRepository subtopicTypeRepository;
 
-  public void addSubtopic(int subtopic, int batch) throws CustomException {
-    Subtopic s = new Subtopic();
-    Batch b;
-    SubtopicName st;
-    SubtopicStatus ss;
-    Date date = new Date();
+	public void addSubtopic(int subtopic, int batch) throws CustomException {
+		Subtopic s = new Subtopic();
+		Batch b;
+		SubtopicName st;
+		SubtopicStatus ss;
+		Date date = new Date();
 
-    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    try {
-      date = dateFormat.parse("23/09/2017");
-    } catch (Exception e) {
-      LogManager.getRootLogger().error(e);
-    }
-    long time = date.getTime();
-    Timestamp ts = new Timestamp(time);
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			date = dateFormat.parse("23/09/2017");
+		} catch (Exception e) {
+			LogManager.getRootLogger().error(e);
+		}
+		long time = date.getTime();
+		Timestamp ts = new Timestamp(time);
 
-    b = batchRepository.findById(batch);
-    st = subtopicNameRepository.findById(subtopic);
-    ss = subtopicStatusRepository.findById(1);
+		b = batchRepository.findById(batch);
+		st = subtopicNameRepository.findById(subtopic);
+		ss = subtopicStatusRepository.findById(1);
 
-    s.setBatch(b);
-    s.setSubtopicName(st);
-    s.setStatus(ss);
-    s.setSubtopicDate(ts);
+		s.setBatch(b);
+		s.setSubtopicName(st);
+		s.setStatus(ss);
+		s.setSubtopicDate(ts);
 
-    subtopicRepository.save(s);
-  }
+		subtopicRepository.save(s);
+	}
 
 	public List<Subtopic> getSubtopicByBatch(Batch batch) {
 		return subtopicRepository.findByBatch(batch);
@@ -77,23 +79,23 @@ public class SubtopicService {
 		return subtopicRepository.findByBatch(batchRepository.findById(batchId));
 	}
 
-  /**
-   * 
-   * @param topic
-   *          Persisting subtopic to database.
-   *          To handle timezone offset, before submission to DB,
-   *          adding offset to date and updating date.
-   * 
-   * @author Samuel Louis-Pierre, Avant Mathur, (1712-dec10-java-Steve) Jordan DeLong 
-   */
-	
-  public Subtopic updateSubtopic(Subtopic subtopic) {
-    Long newDate = subtopic.getSubtopicDate().getTime();
-    subtopic.setSubtopicDate(new Timestamp(newDate));
+	/**
+	 * 
+	 * @param topic
+	 *            Persisting subtopic to database. To handle timezone offset, before
+	 *            submission to DB, adding offset to date and updating date.
+	 * 
+	 * @author Samuel Louis-Pierre, Avant Mathur, (1712-dec10-java-Steve) Jordan
+	 *         DeLong
+	 */
 
-    subtopicRepository.save(subtopic);
-    return subtopic;
-  }
+	public Subtopic updateSubtopic(Subtopic subtopic) {
+		Long newDate = subtopic.getSubtopicDate().getTime();
+		subtopic.setSubtopicDate(new Timestamp(newDate));
+
+		subtopicRepository.save(subtopic);
+		return subtopic;
+	}
 
 	public SubtopicStatus getStatus(String name) {
 		return subtopicStatusRepository.findByName(name);
@@ -184,4 +186,40 @@ public class SubtopicService {
 		  return false;
 	  } 
   }
+  
+  /**
+   * Removes all subtopics from the given batch's calendar
+   * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
+   * @param batchId
+   * @return True if subtopics are successfully removed, false otherwise
+   */
+  @Transactional
+  public boolean removeAllSubtopicsFromBatch(int batchId) {
+	  try {
+		  Batch batch = new Batch();
+		  batch.setId(batchId);
+		  subtopicRepository.deleteByBatch(batch);
+		  return true;
+	  } catch(IllegalArgumentException e) {
+		  return false;
+	  } 
+  }
+
+  	public Subtopic updateSubtopicStatus(Subtopic subtopic) {
+		return subtopicRepository.save(subtopic);
+	}
+  	
+  	/**
+  	 * Returns a single subtopic for a batch, if any exist
+  	 * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
+  	 * @param batchId
+  	 * @return List<Subtopic>
+  	 */
+	public List<Subtopic> findTop1ByBatchId(int batchId){
+		return subtopicRepository.findTop1ByBatchId(batchId);
+	}
+	
+	public List<Subtopic> saveSubtopics(List<Subtopic> subtopics) {
+		return subtopicRepository.save(subtopics);
+	}
 }

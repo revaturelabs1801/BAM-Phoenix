@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 import org.springframework.stereotype.Component;
 
+import com.revature.bam.logging.JSONify;
+
 @Component
 public class AssignForceBatch {
 		
@@ -80,8 +82,17 @@ public class AssignForceBatch {
 
 		@Override
 		public String toString() {
-			return "AssignForceBatch [name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
-					+ ", curriculum=" + curriculum + ", trainer=" + trainer + ", ID=" + id + "]";
+			JSONify jsonify = new JSONify();
+			String json = "{" + jsonify.quotify("AssignForceBatch") + ":{";
+			json += jsonify.addKey("assignForceBatchName") + jsonify.addValue(name);
+			json += jsonify.addKey("assignForceBatchStartDate") + jsonify.addValue(startDate.toString());
+			json += jsonify.addKey("assignForceBatchEndDate") + jsonify.addValue(endDate.toString());
+			json += jsonify.addKey("assignForceBatchCurriculum") + curriculum + ",";
+			json += jsonify.addKey("assignForceBatchTrainer") + trainer + ",";
+			json += jsonify.addKey("assignForceBatchID") + jsonify.addEndValue(id.toString());
+			json += "}}";
+			
+			return json;
 		}
 		
 }
