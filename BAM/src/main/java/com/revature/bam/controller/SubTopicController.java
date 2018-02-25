@@ -26,6 +26,7 @@ public class SubTopicController {
 
 	@Autowired
 	SubtopicService subTopicService;
+<<<<<<< HEAD
 /**
  * @author Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
  * 
@@ -37,53 +38,88 @@ public class SubTopicController {
  */
 
 	
+=======
+
+	/**
+	 * @author Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
+	 * 
+	 * @param request
+	 *            - I request must have to have the name of the topic.
+	 * @return The added subtopic (if any) as a SubtopicName and HttpStatus - status
+	 *         of 201 CREATED if a Subtopic is created or updated. - status of 204
+	 *         NO_CONTENT is a Subtopic is not created.
+	 */
+
+	// @GetMapping("/{id}")
+	// public Subtopic getSubtopic(@PathVariable int id){
+	// return subTopicService.getSubtopic(id);
+	// }
+
+>>>>>>> b4583384da89491e61aca656acbda6b828590097
 	@PostMapping("/updatestatus")
-	public ResponseEntity<Subtopic> updateSubtopicStatus(@RequestBody Subtopic subtopic){
+	public ResponseEntity<Subtopic> updateSubtopicStatus(@RequestBody Subtopic subtopic) {
 		subtopic = subTopicService.updateSubtopicStatus(subtopic);
-		
-		if(subtopic != null)
-		{
+
+		if (subtopic != null) {
 			return new ResponseEntity<Subtopic>(subtopic, HttpStatus.ACCEPTED);
-		}
-		else
-		{
+		} else {
 			return new ResponseEntity<Subtopic>(subtopic, HttpStatus.BAD_REQUEST);
 		}
-		
+
 	}
-	
+
 	@PostMapping("add/{typeId}/{topicId}/{subtopicName}")
-	public ResponseEntity<SubtopicName> addSubTopicName(@PathVariable int typeId, @PathVariable int topicId, @PathVariable String subtopicName) {
+	public ResponseEntity<SubtopicName> addSubTopicName(@PathVariable int typeId, @PathVariable int topicId,
+			@PathVariable String subtopicName) {
 		SubtopicType type = subTopicService.getSubtopicType(typeId);
 		TopicName topic = topicService.getTopicName(topicId);
 		SubtopicName subtopic = new SubtopicName(subtopicName, topic, type);
 		SubtopicName topicUpdate = subTopicService.addOrUpdateSubtopicName(subtopic);
 		if (topicUpdate != null) {
 			return new ResponseEntity<SubtopicName>(topicUpdate, HttpStatus.CREATED);
-		}
-		else {
+		} else {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 	}
-	
+
 	/**
 	 * @author Sean Sung / Batch 1712-dec10-java-steve
 	 * 
 	 * @param post
-	 * 			- accepts subtopicid parameter
-	 * @return HttpStatus
-	 * 			- status of 204 if a subtopic was removed.
-	 * 			- status of 500 if exception.
+	 *            - accepts subtopicid parameter
+	 * @return HttpStatus - status of 204 if a subtopic was removed. - status of 500
+	 *         if exception.
 	 */
 	@PostMapping("remove/{subtopicId}")
 	public ResponseEntity<?> removeSubtopic(@PathVariable int subtopicId) {
-		if(subTopicService.removeSubtopicFromBatch(subtopicId)) {
+		if (subTopicService.removeSubtopicFromBatch(subtopicId)) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	/**
+	 * Checks whether the given batch has any subtopics in its calendar
+	 * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
+	 * @param batchId
+	 * @return HttpStatus - status NO_CONTENT 204 if no subtopics found. - status OK 200 if at least one subtopic exists in batch.
+	 */
+	@GetMapping("ispopulated/{batchId}")
+	public ResponseEntity<?> isPopulated(@PathVariable int batchId) {
+		if (subTopicService.findTop1ByBatchId(batchId).isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+	}
 	
+	/**
+	 * Removes all subtopics from the calendar of the batch with id [batchId]
+	 * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
+	 * @param batchId
+	 * @return HttpStatus - status NO_CONTENT if successful, status INTERNAL_SERVER_ERROR otherwise
+	 */
 	@PostMapping("removebybatch/{batchId}")
 	public ResponseEntity<?> removeSubtopicByBatch(@PathVariable int batchId) {
 		if(subTopicService.removeAllSubtopicsFromBatch(batchId)) {

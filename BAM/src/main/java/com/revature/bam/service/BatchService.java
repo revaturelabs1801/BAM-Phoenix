@@ -68,16 +68,8 @@ public class BatchService {
 	 * @param batch
 	 */
 	public void addCurriculumSubtopicsToBatch(List<CurriculumSubtopic> currSubtopics, Batch batch){
-		System.out.println("you made it to addCurriculumSubtopicsToBatch");
 		Calendar cal = Calendar.getInstance();
 		
-	
-		
-//		int prevSubtopicIndex = 0;
-//		int currentSubtopicIndex = 0;
-//		
-//		int defaultStartTimeHour= 9;
-//		int currentStartTimeHour= 9;
 	    Random rand = new Random();
 
 		for(CurriculumSubtopic cSTopic: currSubtopics){
@@ -92,10 +84,9 @@ public class BatchService {
 			int sDay = cSTopic.getCurriculumSubtopicDay();
 			int sWeek = cSTopic.getCurriculumSubtopicWeek();
 			int absoluteDayOfBatch = (sWeek-1)*7 + sDay - 1;
-			//System.out.println(absoluteDayOfBatch);
+
 			//Set the subtopics date using the batches start date and the 
 			//previously derived absolute day of batch.
-			//System.out.println(batch.getStartDate());
 			cal.setTime(batch.getStartDate());
 			cal.add(Calendar.DAY_OF_WEEK, absoluteDayOfBatch);
 			
@@ -109,14 +100,8 @@ public class BatchService {
 			cal.set(Calendar.MILLISECOND, 0);
 			
 			Timestamp t = new Timestamp(cal.getTime().getTime());
-			//System.out.println(new Date(t.getTime()));
 			sub.setSubtopicDate(t);
 			
-//			prevSubtopicIndex = currentSubtopicIndex;
-//			currentSubtopicIndex++;
-			
-			//System.out.println(sub.getSubtopicDate());
-			//subtopicRepository.save(sub);
 		}
 		
 	}

@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+// import ch.qos.logback.core.net.SyslogOutputStream;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,6 @@ import com.revature.bam.service.CurriculumService;
 import com.revature.bam.service.CurriculumSubtopicService;
 import com.revature.bam.service.SubtopicService;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 @RestController
 @RequestMapping("curriculum/")
 @CrossOrigin
@@ -53,9 +52,6 @@ public class CurriculumController {
 
 	@Autowired
 	SubtopicService subtopicService;
-	
-	@Autowired
-	SubtopicRepository subtopicRepository;
 	
 	@Autowired 
 	BatchService batchService;
@@ -291,23 +287,18 @@ public class CurriculumController {
 	 *         already synced
 	 * @throws CustomException
 	 */
-	@GetMapping(value = "syncbatch/{id}")
+	@GetMapping("syncbatch/{id}")
 	public ResponseEntity<?> syncBatch(@PathVariable int id) throws CustomException{
-		System.out.println("you made it to syncBatch!");
 		Batch currBatch = batchService.getBatchById(id);
 		String batchType = currBatch.getType().getName();
-		System.out.println(batchType);
-		//get curriculums with same batchTypes
 		List<Curriculum> curriculumList = curriculumService.findAllCurriculumByNameAndIsMaster(batchType,1);
-		//List<Curriculum> curriculumList = curriculumService.findAllCurriculumByName(batchType);
-		System.out.println(curriculumList);
-		//find the master curriculum; otherwise find one with most up to date version
+
+		//get master version
 		Curriculum c = null;
 		for(int i = 0;  i < curriculumList.size(); i++){
 			//master version found
 			if(curriculumList.get(i).getIsMaster() == 1){
 				c = curriculumList.get(i);
-				//System.out.println(c);
 			}
 		}
 		
@@ -315,9 +306,7 @@ public class CurriculumController {
 		if(c == null){
 			System.out.println("you made it to find latest version");
 			curriculumList = curriculumService.findAllCurriculumByName(batchType);
-			if(curriculumList != null)
-			{
-				System.out.println(curriculumList);
+			if(curriculumList != null){
 				int min = curriculumList.get(0).getCurriculumVersion();
 				Curriculum tempCurric = curriculumList.get(0);
 				for(int i = 1; i < curriculumList.size(); i++){
@@ -328,8 +317,7 @@ public class CurriculumController {
 				}
 				c = tempCurric;
 			}
-			else
-			{
+			else{
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
 			}
 		}
@@ -353,8 +341,6 @@ public class CurriculumController {
 		ArrayList<Subtopic> subtopics = new ArrayList<>();
 		
 		map.forEach((day, weeks) -> {
-			//System.out.println("day " + day + " contains weeks " + weeks);
-			
 			Calendar cal = Calendar.getInstance();
 
 		    Random rand = new Random(System.currentTimeMillis());
@@ -363,15 +349,13 @@ public class CurriculumController {
 				
 			    // nextInt is normally exclusive of the top value,
 			    // so add 1 to make it inclusive
-			    int randomNum = rand.nextInt((17 - 9) + 1) + 9;
+			    int randomNum = rand.nextInt((11 - 9) + 1) + 9;
 			    
 				Subtopic subtopic = new Subtopic();
-				
 				
 				subtopic.setBatch(currBatch);
 				subtopic.setSubtopicName(curriculumSubtopic.getCurriculumSubtopicNameId());
 				subtopic.setStatus(subStatus);
-				
 				
 				cal.setTime(currBatch.getStartDate());
 				
@@ -385,23 +369,19 @@ public class CurriculumController {
 				
 				cal.add(Calendar.DAY_OF_WEEK, absDay);
 				
-				
 				subtopic.setSubtopicDate(new Timestamp(cal.getTime().getTime()));
 				subtopics.add(subtopic);
 			}	
 		});
 		
-		subtopicRepository.save(subtopics);
-		//logic goes here to add to calendar
-		if(subtopicService.getNumberOfSubtopics(id) ==  0){
-//			batchService.addCurriculumSubtopicsToBatch(subtopicList, currBatch);
-		}else{
-			//throw new CustomException("Batch already synced");
+		List<Subtopic> persistedSubtopics = subtopicService.saveSubtopics(subtopics);
+		if(persistedSubtopics.isEmpty()){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}else{
+			return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
 		}
-		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+		
 	}
-	
 	/**
 	 * @author Carter Taylor, James Holzer (1712-Steve)
 	 * @param RequestBody Curriculum version
