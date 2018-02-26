@@ -304,7 +304,6 @@ public class CurriculumController {
 		
 		//if master not found, get latest version
 		if(c == null){
-			System.out.println("you made it to find latest version");
 			curriculumList = curriculumService.findAllCurriculumByName(batchType);
 			if(curriculumList != null){
 				int min = curriculumList.get(0).getCurriculumVersion();
@@ -337,50 +336,13 @@ public class CurriculumController {
 		map.put(4, subtopicListThursday);
 		map.put(5, subtopicListFriday);
 		
-		SubtopicStatus subStatus = subtopicService.getStatus("Pending");
-		ArrayList<Subtopic> subtopics = new ArrayList<>();
+		List<Subtopic> persistedSubtopics = subtopicService.mapCurriculumSubtopicsToSubtopics(map, currBatch);
 		
-		map.forEach((day, weeks) -> {
-			Calendar cal = Calendar.getInstance();
-
-		    Random rand = new Random(System.currentTimeMillis());
-		    
-			for(CurriculumSubtopic curriculumSubtopic: weeks){
-				
-			    // nextInt is normally exclusive of the top value,
-			    // so add 1 to make it inclusive
-			    int randomNum = rand.nextInt((11 - 9) + 1) + 9;
-			    
-				Subtopic subtopic = new Subtopic();
-				
-				subtopic.setBatch(currBatch);
-				subtopic.setSubtopicName(curriculumSubtopic.getCurriculumSubtopicNameId());
-				subtopic.setStatus(subStatus);
-				
-				cal.setTime(currBatch.getStartDate());
-				
-				cal.set(Calendar.HOUR_OF_DAY, randomNum);
-				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 0);
-				cal.set(Calendar.MILLISECOND, 0);
-				
-				int week = curriculumSubtopic.getCurriculumSubtopicWeek();
-				int absDay = (week-1)*7 + day - 1;
-				
-				cal.add(Calendar.DAY_OF_WEEK, absDay);
-				
-				subtopic.setSubtopicDate(new Timestamp(cal.getTime().getTime()));
-				subtopics.add(subtopic);
-			}	
-		});
-		
-		List<Subtopic> persistedSubtopics = subtopicService.saveSubtopics(subtopics);
 		if(persistedSubtopics.isEmpty()){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else{
 			return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
 		}
-		
 	}
 	/**
 	 * @author Carter Taylor, James Holzer (1712-Steve)
