@@ -3,8 +3,12 @@ package com.revature.bam.service;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import javax.transaction.Transactional;
 
@@ -14,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.revature.bam.bean.Batch;
+import com.revature.bam.bean.CurriculumSubtopic;
 import com.revature.bam.bean.Subtopic;
 import com.revature.bam.bean.SubtopicName;
 import com.revature.bam.bean.SubtopicStatus;
@@ -221,5 +226,63 @@ public class SubtopicService {
 	
 	public List<Subtopic> saveSubtopics(List<Subtopic> subtopics) {
 		return subtopicRepository.save(subtopics);
+	}
+	
+  	/**
+  	 * Maps curriculum subtopics into subtopics. Each subtopic date is determined by the start date of the batch offset by the week and day of the corresponding curriculum subtopic. 
+  	 * @author Jordan DeLong, Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
+  	 * @param map, batch
+  	 * @return List<Subtopic>
+  	 */
+	public List<Subtopic> mapCurriculumSubtopicsToSubtopics(Map<Integer, List<CurriculumSubtopic>> map, Batch batch){
+		
+		SubtopicStatus subStatus = subtopicStatusRepository.findByName("Pending");
+		ArrayList<Subtopic> subtopics = new ArrayList<>();
+		
+		//spin up multiple threads that concurrently instantiate new subtopics from lists of curriculum subtopics and add each new subtopic instance to a list of subtopics that will be persisted once all threads have finished
+		map.forEach((day, weeks) -> {
+			Calendar cal = Calendar.getInstance();
+
+		    Random rand = new Random(System.currentTimeMillis());
+		    
+			for(CurriculumSubtopic curriculumSubtopic: weeks){
+				
+				// a random starting hour between 9:00 am and 4:00 pm is assigned for each new subtopic
+				// +5 hours are added to the min and max of range to compensate for production server timezone difference
+			    int randomNum = rand.nextInt((21 - 14) + 1) + 14; // nextInt is normally exclusive of the top value, so add 1 to make it inclusive
+			    
+				Subtopic subtopic = new Subtopic();
+				
+				subtopic.setBatch(batch);
+				subtopic.setSubtopicName(curriculumSubtopic.getCurriculumSubtopicNameId());
+				subtopic.setStatus(subStatus);
+				
+				//set date to the batch start date
+				cal.setTime(batch.getStartDate());
+				
+				//set the time
+				cal.set(Calendar.HOUR_OF_DAY, randomNum);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				
+				//determine how many days offset from the start date the new subtopic will be
+				int week = curriculumSubtopic.getCurriculumSubtopicWeek();
+				int absDay = (week-1)*7 + day - 1;
+				
+				//determine what the actual date on the calendar will be by adding the offset to the currently set calendar day (the batch start date)
+				cal.add(Calendar.DAY_OF_WEEK, absDay);
+				
+				//set the subtopic date by converting the calculated date into milliseconds
+				subtopic.setSubtopicDate(new Timestamp(cal.getTime().getTime()));
+				
+				//add the subtopic to a list of subtopics that will be persisted to the database
+				subtopics.add(subtopic);
+			}	
+		});
+		
+		return subtopicRepository.save(subtopics);
+		
+		
 	}
 }

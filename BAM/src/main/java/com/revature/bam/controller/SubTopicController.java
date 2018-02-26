@@ -26,7 +26,8 @@ public class SubTopicController {
 
 	@Autowired
 	SubtopicService subTopicService;
-<<<<<<< HEAD
+
+	
 /**
  * @author Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
  * 
@@ -36,26 +37,6 @@ public class SubTopicController {
  * 			- status of 201 CREATED if a Subtopic is created or updated.
  * 			- status of 204 NO_CONTENT is a Subtopic is not created.
  */
-
-	
-=======
-
-	/**
-	 * @author Cristian Hermida, Charlie Harris / Batch 1712-dec10-java-steve
-	 * 
-	 * @param request
-	 *            - I request must have to have the name of the topic.
-	 * @return The added subtopic (if any) as a SubtopicName and HttpStatus - status
-	 *         of 201 CREATED if a Subtopic is created or updated. - status of 204
-	 *         NO_CONTENT is a Subtopic is not created.
-	 */
-
-	// @GetMapping("/{id}")
-	// public Subtopic getSubtopic(@PathVariable int id){
-	// return subTopicService.getSubtopic(id);
-	// }
-
->>>>>>> b4583384da89491e61aca656acbda6b828590097
 	@PostMapping("/updatestatus")
 	public ResponseEntity<Subtopic> updateSubtopicStatus(@RequestBody Subtopic subtopic) {
 		subtopic = subTopicService.updateSubtopicStatus(subtopic);
