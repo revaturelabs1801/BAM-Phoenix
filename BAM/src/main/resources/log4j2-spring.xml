@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN">
+            {"timestamp":"%d{yyyy-MM-dd, hh:mm:ss.SSS a}","level":"%p","thread":"[%15.15t] %-40.40c{1.}", %m } %n
+        </Property>
+        <Property name="CONSOLE_PATTERN">
+        	%d{yyyy-MM-dd, hh:mm:ss.SSS a} %5p - [%15.15t] %-40.40c{1.} : %m%n%ex
+        </Property>
+        <Property name="baseDir">logs</Property>
+        <Property name="rollName">log4j2-BAM</Property>
+    </Properties>
+    <Appenders>
+		Rolling File Appender
+		<RollingFile name="FileAppender" fileName="${baseDir}/BAMLogs.log" 
+		             filePattern="${baseDir}/${rollName}-%d{yyyy-MM-dd}-%i.log">
+		    <PatternLayout>
+		        <Pattern>${LOG_PATTERN}</Pattern>
+		    </PatternLayout>
+		    <Policies>
+		    	Rollover when current Log reaches 10MB in size
+		        <SizeBasedTriggeringPolicy size="10MB" />
+		         Rollover every day
+	    		<TimeBasedTriggeringPolicy interval="1" />
+		    </Policies>
+		   	Rollover a maximum of 20 times in a one day period
+		    <DefaultRolloverStrategy max="20">
+		    	Delete from the base 'logs' folder when the folder exceeds 2GB in size.
+		    	Also delete files older than 60 days.
+		    	<Delete basePath="${baseDir}" maxDepth="1">
+		    		<IfFileName glob="${rollName}-*.log">
+			    		<IfAny>
+			    			<IfAccumulatedFileSize exceeds="2GB"/>
+			    			<IfLastModified age="60d"/>
+			    		</IfAny>
+		    		</IfFileName>
+		    	</Delete>
+		    </DefaultRolloverStrategy>
+		</RollingFile>
+		Console Output Appender
+		<Console name="ConsoleAppender" target="SYSTEM_OUT" 
+				 ignoreExceptions="false" follow="true">
+			<PatternLayout>
+				<Pattern>${CONSOLE_PATTERN}</Pattern>
+			</PatternLayout>
+		</Console>
+    </Appenders>
+     file output for logging
+    <Loggers>
+        <AsyncLogger name="com.revature.bam" level="debug" additivity="false">
+            <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="ConsoleAppender" />
+        </AsyncLogger>
+        <Root level="info">
+            <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="ConsoleAppender" />
+        </Root>
+    </Loggers>
+</Configuration>
+ 

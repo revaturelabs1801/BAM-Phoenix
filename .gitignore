@@ -29,44 +29,26 @@ MANIFEST.MF
 hs_err_pid*
 
 ## STS ###
-
 */bin
 .apt_generated
 *.classpath
 .factorypath
-
 *.project
-
 *.settings
-
 .springBeans
 
-
-
 ### IntelliJ IDEA ###
-
 .idea
-
 *.iws
-
 *.iml
-
 *.ipr
 
-
-
 ### NetBeans ###
-
 nbproject/private/
-
 build/
-
 nbbuild/
-
 dist/
-
 nbdist/
-
 .nb-gradle/
 
 ### workspace ###
@@ -74,6 +56,57 @@ nbdist/
 Servers/
 .recommenders
 BAM/src/test/node_modules
-
 BAM/src/test/package.json
 
+## STS ###
+
+*/bin
+.apt_generated
+*.classpath
+.factorypath
+*.project
+*.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+/.metadata/
+
+### workspace ###
+.metadata/
+Servers/
+.recommenders
+BAM/src/test/node_modules
+BAM/src/test/package.jsons
+
+# Sublime Workspace
+*.sublime-workspace
+*.sublime-project
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# System Files
+*.DS_Store
+Thumbs.db
